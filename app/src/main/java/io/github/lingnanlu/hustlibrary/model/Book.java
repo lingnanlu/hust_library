@@ -1,4 +1,4 @@
-package io.github.lingnanlu.hustlibrary;
+package io.github.lingnanlu.hustlibrary.model;
 
 /**
  * Created by Rico on 2015/12/9.
@@ -11,6 +11,8 @@ public class Book {
     private String mPress;
     private String mAbstracts;
     private String mISBN;
+    private String mLocation;
+    private String mCallNumber;
 
     public String getmCallNumber() {
         return mCallNumber;
@@ -76,8 +78,7 @@ public class Book {
         this.mTitle = mTitle;
     }
 
-    private String mLocation;
-    private String mCallNumber;
+
 
 
 
