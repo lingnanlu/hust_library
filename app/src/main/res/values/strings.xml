@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">HustLibrary</string>
+
+
+    <!-- for spinner -->
+    <string-array name="category">
+        <item>关键词</item>
+        <item>题名</item>
+        <item>作者</item>
+        <item>主题词</item>
+        <item>分类/索书号</item>
+        <item>ISBN/ISSN</item>
+    </string-array>
 </resources>
