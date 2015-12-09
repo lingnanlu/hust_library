@@ -1,11 +1,16 @@
 package io.github.lingnanlu.hustlibrary.Views;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -15,6 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.github.lingnanlu.hustlibrary.R;
 import io.github.lingnanlu.hustlibrary.model.Item;
 import io.github.lingnanlu.hustlibrary.utils.HtmlParser;
@@ -28,16 +35,17 @@ public class ItemListActivity extends AppCompatActivity {
 
     private Handler mHandler;
 
-    public static final String[] strs = new String[]{
-            "first", "second", "third", "fourch", "fifth"
-    };
+    @Bind(R.id.listView)
+    ListView mListView;
 
-    private ListView mListView;
-
+    ArrayList<HashMap<String, String>> mItemList = new ArrayList<HashMap<String, String>>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
+        ButterKnife.bind(this);
+
 
         String keyWord = getIntent().getStringExtra(MainActivity.DATA_KEYWORD);
 
@@ -47,8 +55,6 @@ public class ItemListActivity extends AppCompatActivity {
                 keyWord);
 
         mHandler = new Handler();
-
-        mListView = (ListView) findViewById(R.id.listView);
 
         //启动另一个线程从网络中读数据并解析，解析完后，发送一条消息到UI线程，由UI线程更新UI
         new Thread(new Runnable() {
@@ -74,8 +80,7 @@ public class ItemListActivity extends AppCompatActivity {
                         public void run() {
                             Log.d(TAG, "" + items.size());
 
-                            ArrayList<HashMap<String, String>> list = new
-                                    ArrayList<HashMap<String, String>>();
+
 
                             for(Item item : items) {
 
@@ -83,18 +88,21 @@ public class ItemListActivity extends AppCompatActivity {
                                 map.put("TITLE", item.getBookTitle());
                                 map.put("AUTHOR", item.getAuthor());
                                 map.put("PRESS", item.getPress());
-                                list.add(map);
+                                mItemList.add(map);
 
                             }
 
-                            SimpleAdapter adapter = new SimpleAdapter(
+                          /*  SimpleAdapter adapter = new SimpleAdapter(
                                     ItemListActivity.this,
-                                    list,
+                                    mItemList,
                                     R.layout.list_item,
                                     new String[] {"TITLE", "AUTHOR", "PRESS"},
                                     new int[] { R.id.listItemBookTitle,
                                                 R.id.listItemBookAuthor,
-                                                R.id.listItemBookPress});
+                                                R.id.listItemBookPress});*/
+
+                            ItemAdapter adapter = new ItemAdapter
+                                    (ItemListActivity.this);
 
                             mListView.setAdapter(adapter);
                         }
@@ -112,5 +120,73 @@ public class ItemListActivity extends AppCompatActivity {
 
     }
 
+
+    public class ItemAdapter extends BaseAdapter {
+
+        private LayoutInflater mInflater;
+
+        public ItemAdapter(Context context) {
+
+            mInflater = LayoutInflater.from(context);
+
+        }
+
+        @Override
+        public int getCount() {
+            return mItemList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ViewHolder viewHolder;
+
+            if (convertView == null) {
+
+                convertView = mInflater.inflate(R.layout.list_item, null);
+
+                viewHolder = new ViewHolder();
+
+                viewHolder.bookAuthor = (TextView) findViewById(R.id.listItemBookAuthor);
+                viewHolder.bookTitle = (TextView) findViewById(R.id.listItemBookTitle);
+                viewHolder.bookPress = (TextView) findViewById(R.id.listItemBookPress);
+
+                convertView.setTag(viewHolder);
+            } else {
+
+                viewHolder = (ViewHolder)convertView.getTag();
+
+            }
+
+            viewHolder.bookAuthor.setText(mItemList.get(position).get
+                    ("AUTHOR"));
+
+            viewHolder.bookPress.setText(mItemList.get(position).get
+                    ("PRESS"));
+
+            viewHolder.bookTitle.setText(mItemList.get(position).get
+                    ("TITLE"));
+
+            return convertView;
+        }
+
+        public class ViewHolder {
+
+            public TextView bookTitle;
+            public TextView bookAuthor;
+            public TextView bookPress;
+
+        }
+    }
 
 }
