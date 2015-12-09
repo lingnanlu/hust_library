@@ -9,5 +9,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="io.github.lingnanlu.hustlibrary.Views.ItemListActivity">
+    
+    
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    </ListView>
 
 </RelativeLayout>

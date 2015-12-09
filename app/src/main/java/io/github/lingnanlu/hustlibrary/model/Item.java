@@ -9,36 +9,45 @@ public class Item {
     private String mBookTitle;
     private String mAuthor;
     private String mPress;
+    private String mImageUrl;
 
-    public String getmPress() {
+    public String getImageUrl() {
+        return mImageUrl;
+    }
+
+    public void setImageUrl(String mImageUrl) {
+        this.mImageUrl = mImageUrl;
+    }
+
+    public String getPress() {
         return mPress;
     }
 
-    public void setmPress(String mPress) {
+    public void setPress(String mPress) {
         this.mPress = mPress;
     }
 
-    public String getmAuthor() {
+    public String getAuthor() {
         return mAuthor;
     }
 
-    public void setmAuthor(String mAuthor) {
+    public void setAuthor(String mAuthor) {
         this.mAuthor = mAuthor;
     }
 
-    public String getmBookTitle() {
+    public String getBookTitle() {
         return mBookTitle;
     }
 
-    public void setmBookTitle(String mBookTitle) {
+    public void setBookTitle(String mBookTitle) {
         this.mBookTitle = mBookTitle;
     }
 
-    public String getmUrl() {
+    public String getUrl() {
         return mUrl;
     }
 
-    public void setmUrl(String mUrl) {
+    public void setUrl(String mUrl) {
         this.mUrl = mUrl;
     }
 }
