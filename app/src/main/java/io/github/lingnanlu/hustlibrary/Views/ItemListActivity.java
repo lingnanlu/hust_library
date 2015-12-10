@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,6 +53,7 @@ public class ItemListActivity extends AppCompatActivity {
     private ArrayList<Item> mBookItems;
 
 
+    private Map<String, Bitmap> mCachedBitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -61,6 +64,7 @@ public class ItemListActivity extends AppCompatActivity {
         mPlaceHolderBitmap = BitmapFactory.decodeResource(getResources(), R
                 .drawable.empty_view_bg);
 
+        mCachedBitmap = new HashMap<>();
         fillListView();
     }
 
@@ -178,7 +182,16 @@ public class ItemListActivity extends AppCompatActivity {
 //            new BookCoverDownloaderTask(viewHolder.bookCover).
 //                    execute(item.getImageUrl());
 
-            loadBookCover(item.getImageUrl(), viewHolder.bookCover);
+            if (mCachedBitmap.containsKey(item.getImageUrl())) {
+
+                viewHolder.bookCover.setImageBitmap(mCachedBitmap.get(item.getImageUrl()));
+
+            } else {
+
+                loadBookCover(item.getImageUrl(), viewHolder.bookCover);
+
+            }
+
 
             return convertView;
         }
@@ -246,6 +259,10 @@ public class ItemListActivity extends AppCompatActivity {
 
                 if (in != null) {
                     Bitmap bookCover = BitmapFactory.decodeStream(in);
+
+                    if(!mCachedBitmap.containsKey(imageUrl)) {
+                        mCachedBitmap.put(imageUrl, bookCover);
+                    }
                     return bookCover;
                 }
 
