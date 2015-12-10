@@ -1,8 +1,11 @@
 package io.github.lingnanlu.hustlibrary.Views;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,7 +46,10 @@ public class ItemListActivity extends AppCompatActivity {
     @Bind(R.id.listView)
     ListView mListView;
 
+
+    Bitmap mPlaceHolderBitmap;
     private ArrayList<Item> mBookItems;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,9 @@ public class ItemListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
         ButterKnife.bind(this);
+
+        mPlaceHolderBitmap = BitmapFactory.decodeResource(getResources(), R
+                .drawable.empty_view_bg);
 
         fillListView();
     }
@@ -164,10 +173,12 @@ public class ItemListActivity extends AppCompatActivity {
             viewHolder.bookAuthor.setText(item.getAuthor());
             viewHolder.bookPress.setText(item.getPress());
             viewHolder.bookTitle.setText(item.getBookTitle());
-            
 
-            new BookCoverDownloaderTask(viewHolder.bookCover).
-                    execute(item.getImageUrl());
+
+//            new BookCoverDownloaderTask(viewHolder.bookCover).
+//                    execute(item.getImageUrl());
+
+            loadBookCover(item.getImageUrl(), viewHolder.bookCover);
 
             return convertView;
         }
@@ -204,10 +215,17 @@ public class ItemListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
 
-            if (imageViewWeakReference != null) {
-                ImageView imageView = imageViewWeakReference.get();
+            if (isCancelled()) {
+                bitmap = null;
+            }
 
-                if (imageView != null && bitmap != null) {
+            if (imageViewWeakReference != null && bitmap != null) {
+
+                final ImageView imageView = imageViewWeakReference.get();
+                final BookCoverDownloaderTask bookCoverDownloaderTask =
+                        getBookCoverDownloaderTask(imageView);
+
+                if (imageView != null && this == bookCoverDownloaderTask) {
                     imageView.setImageBitmap(bitmap);
                 }
             }
@@ -240,5 +258,74 @@ public class ItemListActivity extends AppCompatActivity {
     }
 
 
+    private void loadBookCover(String imgUrl, ImageView imageView) {
+
+        if( cancelPotentialWork(imageView) ) {
+
+            final BookCoverDownloaderTask task = new BookCoverDownloaderTask
+                    (imageView);
+
+            final AsyncDrawable asyncDrawable = new AsyncDrawable
+                    (getResources(), mPlaceHolderBitmap, task);
+
+            imageView.setImageDrawable(asyncDrawable);
+
+            task.execute(imgUrl);
+        }
+
+    }
+
+    private static boolean cancelPotentialWork(ImageView
+            imageView) {
+
+        final BookCoverDownloaderTask task = getBookCoverDownloaderTask
+                (imageView);
+
+        if (task != null) {
+
+            task.cancel(true);
+
+        }
+
+        return true;
+    }
+
+    private static BookCoverDownloaderTask getBookCoverDownloaderTask
+            (ImageView imageView) {
+
+        if (imageView != null) {
+
+            final Drawable drawable = imageView.getDrawable();
+
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable)drawable;
+                return asyncDrawable.getBookCoverDownloaderTask();
+            }
+        }
+
+        return null;
+
+    }
+
+    static class AsyncDrawable extends BitmapDrawable {
+
+        private final WeakReference<BookCoverDownloaderTask>
+                bookCoverDownloaderTaskWeakReference;
+
+        public AsyncDrawable(Resources res, Bitmap bitmap,
+                             BookCoverDownloaderTask bookCoverDownloaderTask) {
+            super(res, bitmap);
+
+            bookCoverDownloaderTaskWeakReference = new WeakReference
+                    <BookCoverDownloaderTask>(bookCoverDownloaderTask);
+
+        }
+
+        public BookCoverDownloaderTask getBookCoverDownloaderTask() {
+
+            return bookCoverDownloaderTaskWeakReference.get();
+
+        }
+    }
 
 }
