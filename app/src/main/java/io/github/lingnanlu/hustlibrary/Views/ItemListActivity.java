@@ -1,6 +1,9 @@
 package io.github.lingnanlu.hustlibrary.Views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,8 +21,9 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,7 +43,8 @@ public class ItemListActivity extends AppCompatActivity {
     @Bind(R.id.listView)
     ListView mListView;
 
-    ArrayList<HashMap<String, String>> mItemList = new ArrayList<HashMap<String, String>>();
+    private ArrayList<Item> mBookItems;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -46,6 +52,11 @@ public class ItemListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_list);
         ButterKnife.bind(this);
 
+        fillListView();
+    }
+
+
+    private void fillListView() {
 
         String keyWord = getIntent().getStringExtra(MainActivity.DATA_KEYWORD);
 
@@ -63,14 +74,13 @@ public class ItemListActivity extends AppCompatActivity {
                 Response response = null;
 
                 try {
-                    response = mClient.newCall(request).execute();
 
+                    response = mClient.newCall(request).execute();
                     String content = response.body().string();
                     if (response != null)
                         Log.d(TAG, content);
 
-                    final ArrayList<Item> items = HtmlParser.parserItems
-                            (content);
+                    mBookItems = HtmlParser.parserItems(content);
 
 
                     //将一条Message post到UI线程的MessageQueue,
@@ -78,33 +88,11 @@ public class ItemListActivity extends AppCompatActivity {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d(TAG, "" + items.size());
+                            Log.d(TAG, "" + mBookItems.size());
 
-
-
-                            for(Item item : items) {
-
-                                HashMap<String, String> map = new HashMap<String, String>();
-                                map.put("TITLE", item.getBookTitle());
-                                map.put("AUTHOR", item.getAuthor());
-                                map.put("PRESS", item.getPress());
-                                mItemList.add(map);
-
-                            }
-
-                          /*  SimpleAdapter adapter = new SimpleAdapter(
-                                    ItemListActivity.this,
-                                    mItemList,
-                                    R.layout.list_item,
-                                    new String[] {"TITLE", "AUTHOR", "PRESS"},
-                                    new int[] { R.id.listItemBookTitle,
-                                                R.id.listItemBookAuthor,
-                                                R.id.listItemBookPress});*/
-
-                            ItemAdapter adapter = new ItemAdapter
-                                    (ItemListActivity.this);
-
+                            ItemAdapter adapter = new ItemAdapter(ItemListActivity.this);
                             mListView.setAdapter(adapter);
+
                         }
                     });
 
@@ -117,49 +105,53 @@ public class ItemListActivity extends AppCompatActivity {
             }
         }).start();
 
-
     }
-
 
     public class ItemAdapter extends BaseAdapter {
 
-        private LayoutInflater mInflater;
+        private LayoutInflater inflater;
 
         public ItemAdapter(Context context) {
 
-            mInflater = LayoutInflater.from(context);
+            inflater = LayoutInflater.from(context);
 
         }
 
         @Override
         public int getCount() {
-            return mItemList.size();
+            return mBookItems.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return mBookItems.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
+            Log.d(TAG, "position : " + position );
             ViewHolder viewHolder;
 
             if (convertView == null) {
 
-                convertView = mInflater.inflate(R.layout.list_item, null);
+                convertView = inflater.inflate(R.layout.list_item, null);
 
                 viewHolder = new ViewHolder();
 
-                viewHolder.bookAuthor = (TextView) findViewById(R.id.listItemBookAuthor);
-                viewHolder.bookTitle = (TextView) findViewById(R.id.listItemBookTitle);
-                viewHolder.bookPress = (TextView) findViewById(R.id.listItemBookPress);
+                viewHolder.bookAuthor = (TextView) convertView.findViewById(R
+                        .id.bookAuthor);
+                viewHolder.bookTitle = (TextView) convertView.findViewById(R
+                        .id.bookTitle);
+                viewHolder.bookPress = (TextView) convertView.findViewById(R
+                        .id.bookPress);
+                viewHolder.bookCover = (ImageView) convertView.findViewById(R
+                        .id.bookCover);
 
                 convertView.setTag(viewHolder);
             } else {
@@ -168,25 +160,85 @@ public class ItemListActivity extends AppCompatActivity {
 
             }
 
-            viewHolder.bookAuthor.setText(mItemList.get(position).get
-                    ("AUTHOR"));
+            Item item = mBookItems.get(position);
+            viewHolder.bookAuthor.setText(item.getAuthor());
+            viewHolder.bookPress.setText(item.getPress());
+            viewHolder.bookTitle.setText(item.getBookTitle());
+            
 
-            viewHolder.bookPress.setText(mItemList.get(position).get
-                    ("PRESS"));
-
-            viewHolder.bookTitle.setText(mItemList.get(position).get
-                    ("TITLE"));
+            new BookCoverDownloaderTask(viewHolder.bookCover).
+                    execute(item.getImageUrl());
 
             return convertView;
         }
 
         public class ViewHolder {
 
-            public TextView bookTitle;
-            public TextView bookAuthor;
-            public TextView bookPress;
+            TextView bookTitle;
+            TextView bookAuthor;
+            TextView bookPress;
+            ImageView bookCover;
 
         }
     }
+
+
+    private class BookCoverDownloaderTask extends AsyncTask<String, Void,
+            Bitmap> {
+
+        private final WeakReference<ImageView> imageViewWeakReference;
+
+        public BookCoverDownloaderTask(ImageView imageView) {
+
+            imageViewWeakReference = new WeakReference<ImageView>(imageView);
+
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+
+            return downloadBookCover(params[0]);
+
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+
+            if (imageViewWeakReference != null) {
+                ImageView imageView = imageViewWeakReference.get();
+
+                if (imageView != null && bitmap != null) {
+                    imageView.setImageBitmap(bitmap);
+                }
+            }
+
+        }
+
+        private Bitmap downloadBookCover(String imageUrl) {
+
+
+            Request request = new Request.Builder().url(imageUrl).build();
+
+
+            try {
+
+                Response response = mClient.newCall(request).execute();
+
+                InputStream in = response.body().byteStream();
+
+                if (in != null) {
+                    Bitmap bookCover = BitmapFactory.decodeStream(in);
+                    return bookCover;
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+
 
 }
