@@ -72,7 +72,7 @@ public class ItemListActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mPlaceHolderBitmap = BitmapFactory.decodeResource(getResources(), R
-                .drawable.empty_view_bg);
+                .drawable.ic_book_black_36dp);
 
         mCachedBitmap = new HashMap<>();
         fillListView();

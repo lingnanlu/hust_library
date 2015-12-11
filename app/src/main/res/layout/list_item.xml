@@ -14,7 +14,7 @@
         android:layout_height="50dp"
         android:layout_margin="5dp"
         android:background="@android:color/transparent"
-        tools:src="@drawable/empty_view_bg"
+        tools:src="@drawable/ic_book_black_36dp"
         />
 
     <LinearLayout
