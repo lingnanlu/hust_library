@@ -71,7 +71,6 @@ public class ItemListActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
         mPlaceHolderBitmap = BitmapFactory.decodeResource(getResources(), R
                 .drawable.empty_view_bg);
 
