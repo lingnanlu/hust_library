@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">HustLibrary</string>
 
-
+    <string name="listView_activity_name">Book List</string>
     <!-- for spinner -->
     <string-array name="category">
         <item>关键词</item>
