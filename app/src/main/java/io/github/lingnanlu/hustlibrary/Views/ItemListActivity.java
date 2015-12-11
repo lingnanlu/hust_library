@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,9 @@ public class ItemListActivity extends AppCompatActivity {
     @Bind(R.id.listView)
     ListView mListView;
 
+    @Bind(R.id.myToolbar)
+    Toolbar mToolbar;
+
 
     Bitmap mPlaceHolderBitmap;
     private ArrayList<Item> mBookItems;
@@ -61,6 +65,7 @@ public class ItemListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_list);
         ButterKnife.bind(this);
 
+        setSupportActionBar(mToolbar);
         mPlaceHolderBitmap = BitmapFactory.decodeResource(getResources(), R
                 .drawable.empty_view_bg);
 

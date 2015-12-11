@@ -3,6 +3,7 @@ package io.github.lingnanlu.hustlibrary.Views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,6 +30,8 @@ public class MainActivity
     @Bind(R.id.catagorySpinner)
     Spinner mCatagorySelector;
 
+    @Bind(R.id.myToolbar)
+    Toolbar mToolbar;
 
     public static final String DATA_KEYWORD = "io.github.lingnanlu" +
             ".hustlibrary.keyword";
@@ -39,6 +42,7 @@ public class MainActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        setSupportActionBar(mToolbar);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter
                 .createFromResource(this, R.array.category, android
