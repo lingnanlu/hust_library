@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import io.github.lingnanlu.hustlibrary.model.Book;
 import io.github.lingnanlu.hustlibrary.model.Item;
+import io.github.lingnanlu.hustlibrary.model.Result;
 
 /**
  * Created by Administrator on 2015/12/9.
@@ -18,13 +19,12 @@ import io.github.lingnanlu.hustlibrary.model.Item;
 public class HtmlParser {
 
     private static final String TAG = "HtmlParser";
-
-
-    public static ArrayList<Item> parserItems(String html) {
+    
+    public static Result parserItems(String searchResult) {
 
         ArrayList<Item> items = new ArrayList<>();
 
-        Document document = Jsoup.parse(html);
+        Document document = Jsoup.parse(searchResult);
 
         Elements books = document.select(".briefCitRow");
 
@@ -61,7 +61,11 @@ public class HtmlParser {
 
 //        Log.d(TAG, books.toString());
 
-        return items;
+        Result result = new Result();
+
+        result.setItems(items);
+
+        return result;
     }
 
 

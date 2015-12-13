@@ -184,6 +184,9 @@ public class ItemListActivity extends AppCompatActivity {
             }
 
             Item item = mBookItems.get(position);
+
+            Log.d(TAG, "position : " + position + " imgUrl " + item
+                    .getImageUrl());
             viewHolder.bookAuthor.setText(item.getAuthor());
 //            viewHolder.bookPress.setText(item.getPress());
             viewHolder.bookTitle.setText(item.getBookTitle());
@@ -192,15 +195,20 @@ public class ItemListActivity extends AppCompatActivity {
 //            new BookCoverDownloaderTask(viewHolder.bookCover).
 //                    execute(item.getImageUrl());
 
-            if (mCachedBitmap.containsKey(item.getImageUrl())) {
 
-                viewHolder.bookCover.setImageBitmap(mCachedBitmap.get(item.getImageUrl()));
+            //有的item没有封面imgeUrl会是/screen/xxxxx
+            if(item.getImageUrl().startsWith("http")) {
+                if (mCachedBitmap.containsKey(item.getImageUrl())) {
 
-            } else {
+                    viewHolder.bookCover.setImageBitmap(mCachedBitmap.get(item.getImageUrl()));
 
-                loadBookCover(item.getImageUrl(), viewHolder.bookCover);
+                } else {
 
+                    loadBookCover(item.getImageUrl(), viewHolder.bookCover);
+
+                }
             }
+
 
 
             return convertView;
