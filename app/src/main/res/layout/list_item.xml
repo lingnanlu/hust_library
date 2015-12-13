@@ -13,7 +13,6 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="5dp"
-        android:background="@android:color/transparent"
         tools:src="@drawable/ic_book_black_36dp"
         />
 
@@ -38,12 +37,12 @@
             tools:text="罗伯特.波西格"
             />
 
-        <TextView
-            android:id="@+id/bookPress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="重庆出版社"
-            />
+        <!--<TextView-->
+            <!--android:id="@+id/bookPress"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--tools:text="重庆出版社"-->
+            <!--/>-->
 
     </LinearLayout>
 

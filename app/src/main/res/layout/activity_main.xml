@@ -5,56 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     tools:context="io.github.lingnanlu.hustlibrary.Views.MainActivity">
 
-
-    <include layout="@layout/toolbar"/>
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        tools:background="@color/colorAccent"
+        android:src="@drawable/ic_copyright_black_48dp"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:background="@color/colorPrimary"
         android:gravity="center"
-        android:orientation="vertical"
         >
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="58dp"
-            android:layout_height="64dp"
-            android:src="@drawable/ic_copyright_black_48dp"
+        <Spinner
+            android:id="@+id/catagorySpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginLeft="5dp"
             />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/searchBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:layout_weight="4"
+            />
 
-            <Spinner
-                android:id="@+id/catagorySpinner"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
-
-            <EditText
-                android:id="@+id/searchBox"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="wrap_content"
-                />
-
-            <ImageButton
-                android:id="@+id/searchImageButton"
-                android:src="@drawable/ic_search_black_24dp"
-                android:background="@android:color/transparent"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                />
-        </LinearLayout>
-
-
+        <ImageButton
+            android:id="@+id/searchImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_search_black_48dp"/>
     </LinearLayout>
 
+
 </LinearLayout>
+
+
+

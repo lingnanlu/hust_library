@@ -171,8 +171,8 @@ public class ItemListActivity extends AppCompatActivity {
                         .id.bookAuthor);
                 viewHolder.bookTitle = (TextView) convertView.findViewById(R
                         .id.bookTitle);
-                viewHolder.bookPress = (TextView) convertView.findViewById(R
-                        .id.bookPress);
+//                viewHolder.bookPress = (TextView) convertView.findViewById(R
+//                        .id.bookPress);
                 viewHolder.bookCover = (ImageView) convertView.findViewById(R
                         .id.bookCover);
 
@@ -185,7 +185,7 @@ public class ItemListActivity extends AppCompatActivity {
 
             Item item = mBookItems.get(position);
             viewHolder.bookAuthor.setText(item.getAuthor());
-            viewHolder.bookPress.setText(item.getPress());
+//            viewHolder.bookPress.setText(item.getPress());
             viewHolder.bookTitle.setText(item.getBookTitle());
 
 
@@ -210,7 +210,7 @@ public class ItemListActivity extends AppCompatActivity {
 
             TextView bookTitle;
             TextView bookAuthor;
-            TextView bookPress;
+//            TextView bookPress;
             ImageView bookCover;
 
         }
