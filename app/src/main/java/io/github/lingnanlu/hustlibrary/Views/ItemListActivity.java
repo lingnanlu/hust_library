@@ -46,13 +46,7 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
     private static final String TAG = "ItemListActivity";
 
 
-    public static final int INIT_DATA_NOT_LOAD = 1;
-    public static final int INIT_DATA_HAS_LOADED = 2;
-    private int mInitDataLoadState = INIT_DATA_NOT_LOAD;
-
-    public static final int NOT_LOADING_MORE = 3;
-    public static final int LOADING_MORE = 4;
-    private int mLoadMoreDateState = NOT_LOADING_MORE;
+    private boolean mHasLoaded = false;
 
     private OkHttpClient mClient = new OkHttpClient();
     private Result mResult;
@@ -61,7 +55,7 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
     private Bitmap mPlaceHolderBitmap;
     private ItemAdapter mItemAdapter;
     private Map<String, Bitmap> mCachedBitmap;
-
+    private String mKeyWord;
     @Bind(R.id.listView)
     ListView mListView;
 
@@ -89,66 +83,10 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
                 .drawable.ic_book_black_36dp);
 
         mCachedBitmap = new HashMap<>();
-        fillListView();
+
+        mKeyWord = getIntent().getStringExtra(MainActivity.DATA_KEYWORD);
     }
 
-
-    private void fillListView() {
-
-        final String keyWord = getIntent().getStringExtra(MainActivity.DATA_KEYWORD);
-
-        Log.d(TAG, keyWord);
-
-        String requestUrl = RequestUrlBuilder.build(keyWord);
-
-        final Request request = new Request.Builder().url(requestUrl).build();
-
-        mHandler = new Handler();
-
-        //启动另一个线程从网络中读数据并解析，解析完后，发送一条消息到UI线程，由UI线程更新UI
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Response response = null;
-
-                try {
-
-                    response = mClient.newCall(request).execute();
-                    String content = response.body().string();
-                    if (response != null)
-                        Log.d(TAG, content);
-
-                    mResult = HtmlParser.parserResult(content);
-
-
-                    // TODO: 2015/12/14
-                    // 解析结果时，暂时还未fill keyWord
-                    mResult.setKeyWord(keyWord);
-
-                    mBookItems = HtmlParser.parserItems(content);
-
-                    //将一条Message post到UI线程的MessageQueue,
-                    // 并在UI线程中执行run方法，所以该方法体中要更新UI
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.d(TAG, "" + mBookItems.size());
-
-                            mListView.setAdapter(mItemAdapter);
-                            mInitDataLoadState = INIT_DATA_HAS_LOADED;
-                        }
-                    });
-
-                    // Log.d(TAG, items.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-        }).start();
-
-    }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -164,114 +102,9 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
                 "visibleItemCount = [" + visibleItemCount + "], " +
                 "totalItemCount = [" + totalItemCount + "]");
 
-        if((firstVisibleItem + visibleItemCount) >= totalItemCount) {
-
-            if(mInitDataLoadState == INIT_DATA_HAS_LOADED &&
-                    mLoadMoreDateState == NOT_LOADING_MORE) {
-
-                loadMore();
-
-            }
-
-        }
-    }
-
-    private void loadMore() {
-
-        new AsyncTask<Void, Void, ArrayList<Item>>(){
-
-            @Override
-            protected ArrayList<Item> doInBackground(Void... params) {
-
-                mLoadMoreDateState = LOADING_MORE;
-                if (mResult != null) {
-
-                    String nextPageUrl = mResult.nextPageUrl();
-
-                    Request request = new Request.Builder().url(nextPageUrl)
-                            .build();
-
-                    ArrayList<Item> items;
-                    try {
-                        Response response = mClient.newCall(request).execute();
-
-                        items = HtmlParser.parserItems(response.body().string());
-
-                        return items;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(ArrayList<Item> items) {
-
-                if(items != null) {
-
-                    Log.d(TAG, "onPostExecute called items.size = " + items.size());
-                    mBookItems.addAll(items);
-                    mItemAdapter.notifyDataSetChanged();
-
-                    mLoadMoreDateState = NOT_LOADING_MORE;
-                }
-
-            }
-        }.execute();
     }
 
 
-    private void loadBookCover(String imgUrl, ImageView imageView) {
-
-        if( cancelPotentialWork(imageView) ) {
-
-            final BookCoverDownloaderTask task = new BookCoverDownloaderTask
-                    (imageView);
-
-            final AsyncDrawable asyncDrawable = new AsyncDrawable
-                    (getResources(), mPlaceHolderBitmap, task);
-
-            imageView.setImageDrawable(asyncDrawable);
-
-            task.execute(imgUrl);
-        }
-
-    }
-
-    private static boolean cancelPotentialWork(ImageView
-            imageView) {
-
-        final BookCoverDownloaderTask task = getBookCoverDownloaderTask
-                (imageView);
-
-        if (task != null) {
-
-            task.cancel(true);
-
-        }
-
-        return true;
-    }
-
-    private static BookCoverDownloaderTask getBookCoverDownloaderTask
-            (ImageView imageView) {
-
-        if (imageView != null) {
-
-            final Drawable drawable = imageView.getDrawable();
-
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable)drawable;
-                return asyncDrawable.getBookCoverDownloaderTask();
-            }
-        }
-
-        return null;
-
-    }
 
     static class AsyncDrawable extends BitmapDrawable {
 
@@ -293,7 +126,7 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
 
         }
     }
-    
+
     class ItemAdapter extends BaseAdapter {
 
         private LayoutInflater inflater;
@@ -373,12 +206,40 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
                 }
             }
 
-
-
             return convertView;
         }
 
-        public class ViewHolder {
+        private void loadBookCover(String imgUrl, ImageView imageView) {
+
+            if(cancelPotentialWork(imageView) ) {
+
+                final BookCoverDownloaderTask task = new BookCoverDownloaderTask
+                        (imageView);
+
+                final AsyncDrawable asyncDrawable = new AsyncDrawable
+                        (getResources(), mPlaceHolderBitmap, task);
+
+                imageView.setImageDrawable(asyncDrawable);
+
+                task.execute(imgUrl);
+            }
+
+        }
+        private boolean cancelPotentialWork(ImageView imageView) {
+
+            final BookCoverDownloaderTask task = getBookCoverDownloaderTask
+                    (imageView);
+
+            if (task != null) {
+
+                task.cancel(true);
+
+            }
+
+            return true;
+        }
+
+        class ViewHolder {
 
             TextView bookTitle;
             TextView bookAuthor;
@@ -388,7 +249,26 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
         }
     }
 
-    static class BookCoverDownloaderTask extends AsyncTask<String, Void,
+
+
+    public BookCoverDownloaderTask getBookCoverDownloaderTask
+            (ImageView imageView) {
+
+        if (imageView != null) {
+
+            final Drawable drawable = imageView.getDrawable();
+
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable)drawable;
+                return asyncDrawable.getBookCoverDownloaderTask();
+            }
+        }
+
+        return null;
+
+    }
+
+    class BookCoverDownloaderTask extends AsyncTask<String, Void,
             Bitmap> {
 
         private final WeakReference<ImageView> imageViewWeakReference;
@@ -452,6 +332,46 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
             }
 
             return null;
+        }
+
+
+    }
+
+    class ListViewInitTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            String requestUrl = RequestUrlBuilder.build(params[0]);
+
+            Request request = new Request.Builder().url(requestUrl).build();
+
+            Response response = null;
+            try {
+                response = mClient.newCall(request).execute();
+                if (response != null) {
+
+                    String content = response.body().string();
+                    mResult = HtmlParser.parserResult(content);
+
+                    // TODO: 2015/12/14
+                    // 解析结果时，暂时还未fill keyWord
+                    mResult.setKeyWord(mKeyWord);
+                    mBookItems = HtmlParser.parserItems(content);
+
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
         }
     }
 
