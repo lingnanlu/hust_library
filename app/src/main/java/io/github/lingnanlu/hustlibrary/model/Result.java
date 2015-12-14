@@ -1,5 +1,7 @@
 package io.github.lingnanlu.hustlibrary.model;
 
+import io.github.lingnanlu.hustlibrary.utils.RequestUrlBuilder;
+
 /**
  * Created by Rico on 2015/12/13.
  */
@@ -11,7 +13,7 @@ public class Result {
     private int mStep;
 
     public String nextPageUrl() {
-        return null;
+        return RequestUrlBuilder.build(mKeyWord, mIndex + mStep, mTotalCount);
     }
 
     public String getKeyWord() {
