@@ -10,7 +10,6 @@
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="100dp"
         android:layout_height="100dp"
         tools:background="@color/colorAccent"
         android:src="@drawable/ic_copyright_black_48dp"

@@ -19,12 +19,24 @@ import io.github.lingnanlu.hustlibrary.model.Result;
 public class HtmlParser {
 
     private static final String TAG = "HtmlParser";
-    
-    public static Result parserItems(String searchResult) {
+
+    public static Result parserResult(String html) {
+
+        Document document = Jsoup.parse(html);
+
+        Element metaData = document.select(".browseHeaderData")
+                .first();
+
+        String content = metaData.text();
+
+
+
+    }
+    public static ArrayList<Item> parserItems(String html) {
 
         ArrayList<Item> items = new ArrayList<>();
 
-        Document document = Jsoup.parse(searchResult);
+        Document document = Jsoup.parse(html);
 
         Elements books = document.select(".briefCitRow");
 
@@ -61,11 +73,8 @@ public class HtmlParser {
 
 //        Log.d(TAG, books.toString());
 
-        Result result = new Result();
 
-        result.setItems(items);
-
-        return result;
+        return items;
     }
 
 

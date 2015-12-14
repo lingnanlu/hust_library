@@ -43,6 +43,7 @@ public class ItemListActivity extends AppCompatActivity {
 
     private static final String TAG = "ItemListActivity";
 
+
     private OkHttpClient mClient = new OkHttpClient();
 
     private Handler mHandler;
@@ -84,6 +85,7 @@ public class ItemListActivity extends AppCompatActivity {
         String keyWord = getIntent().getStringExtra(MainActivity.DATA_KEYWORD);
 
         Log.d(TAG, keyWord);
+
 
         final Request request = RequestMaker.make("search*chx/X?SEARCH=" +
                 keyWord);

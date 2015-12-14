@@ -1,29 +1,48 @@
 package io.github.lingnanlu.hustlibrary.model;
 
-import java.util.ArrayList;
-
 /**
  * Created by Rico on 2015/12/13.
  */
 public class Result {
 
-    private ArrayList<Item> mItems;
-    private ArrayList<String> mUrls;
+    private String mKeyWord;
+    private int mIndex;
+    private int mTotalCount;
+    private int mCurrentPageItemCount;
 
-
-    public ArrayList<Item> getItems() {
-        return mItems;
+    public String nextPageUrl() {
+        return null;
     }
 
-    public void setItems(ArrayList<Item> items) {
-        mItems = items;
+    public String getKeyWord() {
+        return mKeyWord;
     }
 
-    public ArrayList<String> getUrls() {
-        return mUrls;
+    public void setKeyWord(String keyWord) {
+        mKeyWord = keyWord;
     }
 
-    public void setUrls(ArrayList<String> urls) {
-        mUrls = urls;
+    public int getIndex() {
+        return mIndex;
+    }
+
+    public void setIndex(int index) {
+        mIndex = index;
+    }
+
+    public int getTotalCount() {
+        return mTotalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        mTotalCount = totalCount;
+    }
+
+    public int getCurrentPageItemCount() {
+        return mCurrentPageItemCount;
+    }
+
+    public void setCurrentPageItemCount(int currentPageItemCount) {
+        mCurrentPageItemCount = currentPageItemCount;
     }
 }
