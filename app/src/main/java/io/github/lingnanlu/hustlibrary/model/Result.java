@@ -8,7 +8,7 @@ public class Result {
     private String mKeyWord;
     private int mIndex;
     private int mTotalCount;
-    private int mCurrentPageItemCount;
+    private int mStep;
 
     public String nextPageUrl() {
         return null;
@@ -38,11 +38,12 @@ public class Result {
         mTotalCount = totalCount;
     }
 
-    public int getCurrentPageItemCount() {
-        return mCurrentPageItemCount;
+
+    public int getStep() {
+        return mStep;
     }
 
-    public void setCurrentPageItemCount(int currentPageItemCount) {
-        mCurrentPageItemCount = currentPageItemCount;
+    public void setStep(int step) {
+        mStep = step;
     }
 }

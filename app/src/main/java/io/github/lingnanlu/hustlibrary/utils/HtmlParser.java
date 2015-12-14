@@ -24,12 +24,28 @@ public class HtmlParser {
 
         Document document = Jsoup.parse(html);
 
+        Result result = new Result();
+
         Element metaData = document.select(".browseHeaderData")
                 .first();
 
         String content = metaData.text();
 
 
+        int leftBracketIndex = content.indexOf('(');
+        int minusIndex = content.indexOf('-');
+        int gongIndex = content.indexOf('共');
+        int rightBracketIndex = content.length() - 1;
+
+//        result.setKeyWord(content.substring(0, leftBracketIndex));
+        result.setIndex(Integer.parseInt(content.substring(leftBracketIndex + 1,
+                minusIndex)));
+        result.setStep(Integer.parseInt(content.substring(minusIndex + 1,
+                gongIndex - 1)));
+        result.setTotalCount(Integer.parseInt(content.substring(gongIndex +
+                2, rightBracketIndex)));
+
+        return result;
 
     }
     public static ArrayList<Item> parserItems(String html) {

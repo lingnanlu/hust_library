@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
 import io.github.lingnanlu.hustlibrary.R;
 import io.github.lingnanlu.hustlibrary.model.Item;
 import io.github.lingnanlu.hustlibrary.utils.HtmlParser;
-import io.github.lingnanlu.hustlibrary.utils.RequestMaker;
+import io.github.lingnanlu.hustlibrary.utils.RequestUrlBuilder;
 
 public class ItemListActivity extends AppCompatActivity {
 
@@ -87,8 +87,9 @@ public class ItemListActivity extends AppCompatActivity {
         Log.d(TAG, keyWord);
 
 
-        final Request request = RequestMaker.make("search*chx/X?SEARCH=" +
-                keyWord);
+        String requestUrl = RequestUrlBuilder.build(keyWord, 1, 87);
+
+        final Request request = new Request.Builder().url(requestUrl).build();
 
         mHandler = new Handler();
 
