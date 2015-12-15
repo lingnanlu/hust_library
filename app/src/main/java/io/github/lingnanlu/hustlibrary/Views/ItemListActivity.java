@@ -77,7 +77,7 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
 
 
         mItemAdapter = new ItemAdapter(this);
-        mListView.setOnScrollListener(this);
+       // mListView.setOnScrollListener(this);
 
         mPlaceHolderBitmap = BitmapFactory.decodeResource(getResources(), R
                 .drawable.ic_book_black_36dp);
@@ -85,6 +85,9 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
         mCachedBitmap = new HashMap<>();
 
         mKeyWord = getIntent().getStringExtra(MainActivity.DATA_KEYWORD);
+
+
+        new ListViewInitTask().execute(mKeyWord);
     }
 
 
@@ -105,7 +108,22 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
     }
 
 
+    private static BookCoverDownloaderTask getBookCoverDownloaderTask
+            (ImageView imageView) {
 
+        if (imageView != null) {
+
+            final Drawable drawable = imageView.getDrawable();
+
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable)drawable;
+                return asyncDrawable.getBookCoverDownloaderTask();
+            }
+        }
+
+        return null;
+
+    }
     static class AsyncDrawable extends BitmapDrawable {
 
         private final WeakReference<BookCoverDownloaderTask>
@@ -127,7 +145,7 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
         }
     }
 
-    class ItemAdapter extends BaseAdapter {
+    private class ItemAdapter extends BaseAdapter {
 
         private LayoutInflater inflater;
 
@@ -139,12 +157,26 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
 
         @Override
         public int getCount() {
-            return mBookItems.size();
+            if(mBookItems != null) {
+
+                return mBookItems.size();
+            }
+
+            return 0;
+
         }
 
         @Override
         public Object getItem(int position) {
-            return mBookItems.get(position);
+
+            if(mBookItems != null) {
+
+                return mBookItems.get(position);
+
+            }
+
+            return null;
+
         }
 
         @Override
@@ -174,6 +206,7 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
                         .id.bookCover);
 
                 convertView.setTag(viewHolder);
+
             } else {
 
                 viewHolder = (ViewHolder)convertView.getTag();
@@ -239,6 +272,7 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
             return true;
         }
 
+
         class ViewHolder {
 
             TextView bookTitle;
@@ -249,26 +283,8 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
         }
     }
 
-
-
-    public BookCoverDownloaderTask getBookCoverDownloaderTask
-            (ImageView imageView) {
-
-        if (imageView != null) {
-
-            final Drawable drawable = imageView.getDrawable();
-
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable)drawable;
-                return asyncDrawable.getBookCoverDownloaderTask();
-            }
-        }
-
-        return null;
-
-    }
-
-    class BookCoverDownloaderTask extends AsyncTask<String, Void,
+    private class BookCoverDownloaderTask extends AsyncTask<String,
+            Void,
             Bitmap> {
 
         private final WeakReference<ImageView> imageViewWeakReference;
@@ -337,18 +353,24 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
 
     }
 
-    class ListViewInitTask extends AsyncTask<String, Void, Void> {
+    private class ListViewInitTask extends AsyncTask<String, Void,
+            Void> {
 
         @Override
         protected Void doInBackground(String... params) {
 
+            Log.d(TAG, "doInBackground() called with: " + params[0]);
             String requestUrl = RequestUrlBuilder.build(params[0]);
 
+            Log.d(TAG, requestUrl);
             Request request = new Request.Builder().url(requestUrl).build();
 
             Response response = null;
             try {
                 response = mClient.newCall(request).execute();
+
+                Log.d(TAG, response.toString());
+
                 if (response != null) {
 
                     String content = response.body().string();
@@ -362,7 +384,8 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
 
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+
+                Log.d(TAG, "can't get response " + e);
             }
 
             return null;
@@ -371,7 +394,10 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+
+            mListView.setAdapter(mItemAdapter);
+            mHasLoaded = true;
+
         }
     }
 
