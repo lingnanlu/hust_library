@@ -1,5 +1,7 @@
 package io.github.lingnanlu.hustlibrary.model;
 
+import java.util.ArrayList;
+
 /**
  * Created by Rico on 2015/12/9.
  */
@@ -13,7 +15,7 @@ public class Book {
     private String mISBN;
     private String mLocation;
     private String mCallNumber;
-
+    private ArrayList<String[]> mStoreInfos;
 
     public String getTitle() {
         return mTitle;
@@ -77,5 +79,14 @@ public class Book {
 
     public void setCallNumber(String callNumber) {
         mCallNumber = callNumber;
+    }
+
+
+    public ArrayList<String[]> getStoreInfos() {
+        return mStoreInfos;
+    }
+
+    public void setStoreInfos(ArrayList<String[]> storeInfos) {
+        mStoreInfos = storeInfos;
     }
 }

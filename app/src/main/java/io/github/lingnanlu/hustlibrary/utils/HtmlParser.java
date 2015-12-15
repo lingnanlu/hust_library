@@ -98,10 +98,50 @@ public class HtmlParser {
 
         return items;
     }
-
-
     public static Book parseBook(String html) {
-        return null;
+
+        Book book = new Book();
+
+        Document document = Jsoup.parse(html);
+        /*
+        获得书籍基本信息
+         */
+        Element bibInfoEntry = document.select(".bibInfoEntry").first();
+        Element tbody = bibInfoEntry.select("tbody").first();
+        Elements bibInfoDatas = tbody.select(".bibInfoData");
+        ArrayList<String> entrys = new ArrayList<>();
+        for(Element entry : bibInfoDatas) {
+            entrys.add(entry.text());
+        }
+        book.setTitle(entrys.get(0).split(";")[0]);
+        book.setCallNumber(entrys.get(1));
+        book.setAuthor(entrys.get(2));
+        book.setPress(entrys.get(3));
+        book.setISBN(entrys.get(5));
+
+        /*
+        获得馆藏信息
+         */
+        Element bibItems = document.select(".bibItems").first();
+
+        Elements bibItemsEntrys = bibItems.select(".bibItemsEntry");
+
+        ArrayList<String[]> storeEntrys = new ArrayList<>();
+
+        for(Element entry : bibItemsEntrys) {
+
+            Elements tds = entry.select("td");
+            String[] strs = new String[3];
+            for(int i = 0; i < tds.size(); i++) {
+
+                //remove "&nbsp"
+                strs[i] = tds.get(i).text().replace("\u00a0","");
+            }
+            storeEntrys.add(strs);
+        }
+        book.setStoreInfos(storeEntrys);
+
+        return book;
     }
 
 
