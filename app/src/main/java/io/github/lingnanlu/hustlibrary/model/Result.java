@@ -8,12 +8,37 @@ import io.github.lingnanlu.hustlibrary.utils.RequestUrlBuilder;
 public class Result {
 
     private String mKeyWord;
-    private int mIndex;
-    private int mTotalCount;
-    private int mStep;
 
+    private int mBegin;
+    private int mEnd;
+
+    private int mTotalCount;
+
+
+    private boolean moveToNextPage() {
+
+        if(mEnd == mTotalCount) {
+
+            //说明是最后一页了
+            return false;
+
+        } else {
+
+            mBegin = mEnd + 1;
+            mEnd += Math.min(50, mTotalCount - mEnd);
+            return true;
+
+        }
+
+
+    }
     public String nextPageUrl() {
-        return RequestUrlBuilder.build(mKeyWord, mIndex + mStep, mTotalCount);
+
+        if(moveToNextPage()) {
+            return RequestUrlBuilder.build(mKeyWord, mBegin, mTotalCount);
+        }
+        return null;
+
     }
 
     public String getKeyWord() {
@@ -24,13 +49,6 @@ public class Result {
         mKeyWord = keyWord;
     }
 
-    public int getIndex() {
-        return mIndex;
-    }
-
-    public void setIndex(int index) {
-        mIndex = index;
-    }
 
     public int getTotalCount() {
         return mTotalCount;
@@ -41,11 +59,19 @@ public class Result {
     }
 
 
-    public int getStep() {
-        return mStep;
+    public int getBegin() {
+        return mBegin;
     }
 
-    public void setStep(int step) {
-        mStep = step;
+    public void setBegin(int begin) {
+        mBegin = begin;
+    }
+
+    public int getEnd() {
+        return mEnd;
+    }
+
+    public void setEnd(int end) {
+        mEnd = end;
     }
 }

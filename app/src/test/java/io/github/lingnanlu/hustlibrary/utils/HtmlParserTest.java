@@ -39,14 +39,14 @@ public class HtmlParserTest {
 
         Result result = HtmlParser.parserResult(mResponse.body().string());
 
-        assertEquals(1,result.getIndex());
-        assertEquals(50, result.getStep());
+        assertEquals(1,result.getBegin());
+        assertEquals(50, result.getEnd());
         assertEquals(87, result.getTotalCount());
 
     }
 
     @Test
-    public void not_first_page() throws Exception {
+    public void last_page() throws Exception {
 
         Result result = HtmlParser.parserResult(mResponse.body().string());
 
@@ -61,8 +61,8 @@ public class HtmlParserTest {
 
         result = HtmlParser.parserResult(html.body().string());
 
-        assertEquals(51,result.getIndex());
-        assertEquals(37, result.getStep());
+        assertEquals(51,result.getBegin());
+        assertEquals(87, result.getEnd());
         assertEquals(87, result.getTotalCount());
 
     }

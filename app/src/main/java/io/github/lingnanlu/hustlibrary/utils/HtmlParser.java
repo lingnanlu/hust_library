@@ -39,15 +39,16 @@ public class HtmlParser {
 
 //        result.setKeyWord(content.substring(0, leftBracketIndex));
 
-        int index = Integer.parseInt(content.substring(leftBracketIndex + 1,
+        int begin = Integer.parseInt(content.substring
+                (leftBracketIndex + 1,
                 minusIndex));
-        int step = Integer.parseInt(content.substring(minusIndex + 1,
-                gongIndex - 1)) - index + 1;
+        int end = Integer.parseInt(content.substring(minusIndex + 1,
+                gongIndex - 1));
         int totalCount = Integer.parseInt(content.substring(gongIndex +
                 2, rightBracketIndex));
 
-        result.setIndex(index);
-        result.setStep(step);
+        result.setBegin(begin);
+        result.setEnd(end);
         result.setTotalCount(totalCount);
 
         return result;

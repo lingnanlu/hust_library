@@ -8,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -45,17 +44,17 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
 
     private static final String TAG = "ItemListActivity";
 
-
     private boolean mHasLoaded = false;
 
     private OkHttpClient mClient = new OkHttpClient();
     private Result mResult;
-    private Handler mHandler;
     private ArrayList<Item> mBookItems;
     private Bitmap mPlaceHolderBitmap;
     private ItemAdapter mItemAdapter;
     private Map<String, Bitmap> mCachedBitmap;
     private String mKeyWord;
+    private LoadMoreItemTask mPreTask;
+
     @Bind(R.id.listView)
     ListView mListView;
 
@@ -77,7 +76,7 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
 
 
         mItemAdapter = new ItemAdapter(this);
-       // mListView.setOnScrollListener(this);
+        mListView.setOnScrollListener(this);
 
         mPlaceHolderBitmap = BitmapFactory.decodeResource(getResources(), R
                 .drawable.ic_book_black_36dp);
@@ -90,23 +89,72 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
         new ListViewInitTask().execute(mKeyWord);
     }
 
-
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    public void onScrollStateChanged(AbsListView view, int
+            scrollState) {
 
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int
-            visibleItemCount, int totalItemCount) {
+    public void onScroll(AbsListView view, int
+            firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
 
         Log.d(TAG, "onScroll() called with: " +
                 "firstVisibleItem = [" + firstVisibleItem + "], " +
                 "visibleItemCount = [" + visibleItemCount + "], " +
                 "totalItemCount = [" + totalItemCount + "]");
 
+        //所有的控制逻辑放在Activity中，不要放到AsyncTask中，保持AsyncTask任务的单一性
+
+        Log.d(TAG, "onScroll() mPreTask " + mPreTask + " mHasLoaded" +
+                " " +
+                "" +
+                mHasLoaded);
+
+        if((firstVisibleItem + visibleItemCount) >= totalItemCount) {
+            if ((mPreTask == null && mHasLoaded == true)
+                    || (mHasLoaded == true && mPreTask.getStatus() == AsyncTask.Status.FINISHED)) {
+
+                LoadMoreItemTask task = new LoadMoreItemTask();
+                mPreTask = task;
+                task.execute(mResult.nextPageUrl());
+
+            }
+        }
+
     }
 
+    /*
+    以下两个方法将AsyncTask中代码移动到Activity下，这样更能体现Activity的Controller角色
+    当某某事件发生时，Controller需要执行的动作就写成onXXX方法
+    这也是为什么要使用Activity来实现OnScrollListenser的原因
+     */
+    private void onInitDataLoaded() {
+
+        Log.d(TAG, "onInitDataLoaded: mBookItem size " + mBookItems.size());
+        mListView.setAdapter(mItemAdapter);
+        mHasLoaded = true;
+
+    }
+
+    private void onMoreDataLoaded(ArrayList<Item> items) {
+
+
+        if(items != null) {
+
+            Log.d(TAG, "onMoreDataLoaded: Before mBookItem Size " +
+                    mBookItems.size());
+            Log.d(TAG, "onMoreDataLoaded: items size " + items.size());
+            mBookItems.addAll(items);
+
+            Log.d(TAG, "onMoreDataLoaded: After mBookItem size " +
+                    mBookItems.size());
+            mItemAdapter.notifyDataSetChanged();
+        }
+
+
+    }
 
     private static BookCoverDownloaderTask getBookCoverDownloaderTask
             (ImageView imageView) {
@@ -124,6 +172,7 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
         return null;
 
     }
+
     static class AsyncDrawable extends BitmapDrawable {
 
         private final WeakReference<BookCoverDownloaderTask>
@@ -394,10 +443,46 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            onInitDataLoaded();
+        }
+    }
 
-            mListView.setAdapter(mItemAdapter);
-            mHasLoaded = true;
+    private class LoadMoreItemTask extends AsyncTask<String, Void,
+            ArrayList<Item>> {
 
+        private static final String TAG = "LoadMoreItemTask";
+        @Override
+        protected ArrayList<Item> doInBackground(String... params) {
+
+
+            if(params[0] != null) {
+
+                Request request = new Request.Builder().url(params[0])
+                        .build();
+
+                Response response = null;
+                try {
+                    response = mClient.newCall(request).execute();
+
+                    if (response != null) {
+
+                        String content = response.body().string();
+                        return HtmlParser.parserItems(content);
+
+                    }
+                } catch (IOException e) {
+
+                    Log.d(TAG, "can't get response " + e);
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Item> items) {
+
+            onMoreDataLoaded(items);
         }
     }
 
