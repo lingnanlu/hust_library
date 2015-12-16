@@ -1,5 +1,7 @@
 package io.github.lingnanlu.hustlibrary.model;
 
+import android.graphics.Bitmap;
+
 import java.util.ArrayList;
 
 /**
@@ -16,6 +18,7 @@ public class Book {
     private String mLocation;
     private String mCallNumber;
     private ArrayList<String[]> mStoreInfos;
+    private Bitmap mCover;
 
     public String getTitle() {
         return mTitle;
@@ -88,5 +91,13 @@ public class Book {
 
     public void setStoreInfos(ArrayList<String[]> storeInfos) {
         mStoreInfos = storeInfos;
+    }
+
+    public Bitmap getCover() {
+        return mCover;
+    }
+
+    public void setCover(Bitmap cover) {
+        mCover = cover;
     }
 }

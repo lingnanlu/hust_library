@@ -39,7 +39,7 @@ public class HtmlParserTest {
 
         Response response = mClient.newCall(request).execute();
 
-        Result result = HtmlParser.parserResult(response.body()
+        Result result = HtmlParser.parseResult(response.body()
                 .string());
 
         assertEquals(1, result.getBegin());
@@ -57,7 +57,7 @@ public class HtmlParserTest {
 
         Response response = mClient.newCall(request).execute();
 
-        Result result = HtmlParser.parserResult(response.body()
+        Result result = HtmlParser.parseResult(response.body()
                 .string());
 
         result.setKeyWord("叔本华");
@@ -72,7 +72,7 @@ public class HtmlParserTest {
 
         Response html = mClient.newCall(request).execute();
 
-        result = HtmlParser.parserResult(html.body().string());
+        result = HtmlParser.parseResult(html.body().string());
 
         assertEquals(51, result.getBegin());
         assertEquals(87, result.getEnd());

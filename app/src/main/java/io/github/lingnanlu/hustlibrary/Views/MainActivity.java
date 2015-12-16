@@ -51,7 +51,6 @@ public class MainActivity
         mCatagorySelector.setAdapter(adapter);
         mCatagorySelector.setOnItemSelectedListener(this);
 
-
         mSearchImageButton.setOnClickListener(this);
 
     }

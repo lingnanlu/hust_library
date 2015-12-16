@@ -20,7 +20,7 @@ public class HtmlParser {
 
     private static final String TAG = "HtmlParser";
 
-    public static Result parserResult(String html) {
+    public static Result parseResult(String html) {
 
         Document document = Jsoup.parse(html);
 
@@ -54,7 +54,7 @@ public class HtmlParser {
         return result;
 
     }
-    public static ArrayList<Item> parserItems(String html) {
+    public static ArrayList<Item> parseItems(String html) {
 
         ArrayList<Item> items = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 package io.github.lingnanlu.hustlibrary.Views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -40,10 +42,16 @@ import io.github.lingnanlu.hustlibrary.model.Result;
 import io.github.lingnanlu.hustlibrary.utils.HtmlParser;
 import io.github.lingnanlu.hustlibrary.utils.RequestUrlBuilder;
 
-public class ItemListActivity extends AppCompatActivity implements AbsListView.OnScrollListener{
+public class ItemListActivity extends AppCompatActivity implements
+        AbsListView.OnScrollListener, AdapterView.OnItemClickListener{
 
     private static final String TAG = "ItemListActivity";
 
+    public static final String BOOK_URL = "io.github.lingnanlu" +
+            ".hustlibrary.book_url";
+    public static final String BOOK_COVER_URL = "io.github" +
+            ".lingnanlu" +
+            ".hustlibrary.book_cover_url";
     private boolean mHasLoaded = false;
 
     private OkHttpClient mClient = new OkHttpClient();
@@ -77,6 +85,7 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
 
         mItemAdapter = new ItemAdapter(this);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(this);
 
         mPlaceHolderBitmap = BitmapFactory.decodeResource(getResources(), R
                 .drawable.ic_book_black_36dp);
@@ -156,6 +165,33 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
 
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int
+            position, long id) {
+
+        //使用该方法，会自动处理有header和footer的情况
+        //不能直接使用adapter的getItem方法
+        //注意position和id在有header和footer时不同。
+
+        Item item = (Item) parent.getItemAtPosition(position);
+
+//        if(item != null) {
+//            Toast.makeText(ItemListActivity.this,item.getUrl() +
+//                    item.getBookTitle() , Toast
+//                    .LENGTH_SHORT).show();
+//        }
+
+        if(item != null) {
+            Intent intent = new Intent(this,BookDetailActivity.class);
+
+            String prefix = "http://ftp.lib.hust.edu.cn";
+            intent.putExtra(BOOK_URL, prefix + item.getUrl());
+            intent.putExtra(BOOK_COVER_URL, item.getImageUrl());
+
+            startActivity(intent);
+        }
+
+    }
     private static BookCoverDownloaderTask getBookCoverDownloaderTask
             (ImageView imageView) {
 
@@ -172,6 +208,8 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
         return null;
 
     }
+
+
 
     static class AsyncDrawable extends BitmapDrawable {
 
@@ -423,12 +461,12 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
                 if (response != null) {
 
                     String content = response.body().string();
-                    mResult = HtmlParser.parserResult(content);
+                    mResult = HtmlParser.parseResult(content);
 
                     // TODO: 2015/12/14
                     // 解析结果时，暂时还未fill keyWord
                     mResult.setKeyWord(mKeyWord);
-                    mBookItems = HtmlParser.parserItems(content);
+                    mBookItems = HtmlParser.parseItems(content);
 
 
                 }
@@ -467,7 +505,7 @@ public class ItemListActivity extends AppCompatActivity implements AbsListView.O
                     if (response != null) {
 
                         String content = response.body().string();
-                        return HtmlParser.parserItems(content);
+                        return HtmlParser.parseItems(content);
 
                     }
                 } catch (IOException e) {
