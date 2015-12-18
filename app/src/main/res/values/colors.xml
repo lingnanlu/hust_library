@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+
+    <!-- Indigo -->
+    <color name="indigo_primary_500">#3F51B5</color>
+    <color name="indigo_primary_dark_700">#303F9F</color>
+    <color name="indigo_primary_light_100">#C5CAE9</color>
+    <color name="indigo_accent_A200">#536DFE</color>
+
+
+    <!-- Pink -->
+    <color name="pink_primary_500">#E91E63</color>
+    <color name="pink_primary_dark_700">#C2185B</color>
+    <color name="pink_primary_light_100">#F8BBD0</color>
+    <color name="pink_accent_A200">#FF4081</color>
+
+
+    <color name="grey_700">#616161</color>
+    <color name="grey_300">#E0E0E0</color>
+    <color name="white">#FFFFFF</color>
 </resources>

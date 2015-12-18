@@ -74,7 +74,7 @@ public class ItemListActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_list);
+        setContentView(R.layout.activity_item_list);
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
@@ -279,7 +279,9 @@ public class ItemListActivity extends AppCompatActivity implements
 
             if (convertView == null) {
 
-                convertView = inflater.inflate(R.layout.list_item, null);
+                convertView = inflater.inflate(R.layout
+                                .list_item,
+                        null);
 
                 viewHolder = new ViewHolder();
 
@@ -287,8 +289,8 @@ public class ItemListActivity extends AppCompatActivity implements
                         .id.bookAuthor);
                 viewHolder.bookTitle = (TextView) convertView.findViewById(R
                         .id.bookTitle);
-//                viewHolder.bookPress = (TextView) convertView.findViewById(R
-//                        .id.bookPress);
+                viewHolder.bookPress = (TextView) convertView.findViewById(R
+                        .id.bookPress);
                 viewHolder.bookCover = (ImageView) convertView.findViewById(R
                         .id.bookCover);
 
@@ -305,7 +307,7 @@ public class ItemListActivity extends AppCompatActivity implements
             Log.d(TAG, "position : " + position + " imgUrl " + item
                     .getImageUrl());
             viewHolder.bookAuthor.setText(item.getAuthor());
-//            viewHolder.bookPress.setText(item.getPress());
+            viewHolder.bookPress.setText(item.getPress());
             viewHolder.bookTitle.setText(item.getBookTitle());
 
 
@@ -364,8 +366,9 @@ public class ItemListActivity extends AppCompatActivity implements
 
             TextView bookTitle;
             TextView bookAuthor;
-            //            TextView bookPress;
+            TextView bookPress;
             ImageView bookCover;
+
 
         }
     }

@@ -117,7 +117,7 @@ public class HtmlParser {
         book.setCallNumber(entrys.get(1));
         book.setAuthor(entrys.get(2));
         book.setPress(entrys.get(3));
-        book.setISBN(entrys.get(5));
+        book.setISBN(entrys.get(5).split(" ")[0]);
 
         /*
         获得馆藏信息

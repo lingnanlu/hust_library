@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,12 +54,20 @@ public class BookDetailActivity extends AppCompatActivity {
     @Bind(R.id.bookStoreInfos)
     ListView mBookStoreInfos;
 
+    @Bind(R.id.myToolbar)
+    Toolbar mToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
         ButterKnife.bind(this);
 
+
+        setSupportActionBar(mToolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         mClient = new OkHttpClient();
 
         String bookInfoUrl = getIntent().getStringExtra
@@ -84,6 +94,12 @@ public class BookDetailActivity extends AppCompatActivity {
 
         BookStoreInfoAdapter adapter = new BookStoreInfoAdapter(book);
 
+        /*
+        findViewById() only works to find subviews of the object View. It will not work on a layout id.
+         */
+        View header = getLayoutInflater().inflate(R.layout
+                .list_book_store_info_header, mBookStoreInfos, false);
+        mBookStoreInfos.addHeaderView(header, null, false);
         mBookStoreInfos.setAdapter(adapter);
 
 
@@ -129,7 +145,7 @@ public class BookDetailActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             View container = inflater.inflate(R.layout
-                            .list_item_book_store_info, null);
+                            .list_book_store_info, null);
 
             TextView location = (TextView) container.findViewById(R.id.location);
             TextView state = (TextView) container.findViewById(R.id.state);
@@ -139,7 +155,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
             if (position % 2 == 0) {
                 container.setBackgroundColor(getResources()
-                        .getColor(R.color.colorAccent));
+                        .getColor(R.color.grey_300));
             }
             return container;
         }

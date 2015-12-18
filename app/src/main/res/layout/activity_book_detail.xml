@@ -5,62 +5,86 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="io.github.lingnanlu.hustlibrary.Views.BookDetailActivity">
 
+    >
 
-    <ImageView
-        android:id="@+id/bookCoverImageView"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        tools:background="@color/colorPrimary"
-        />
+    <include layout="@layout/toolbar" />
 
     <LinearLayout
-        android:padding="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_margin="8dp"
         >
 
-        <TextView
-            android:id="@+id/bookTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="叔本华静心课"
-            />
 
-        <TextView
-            android:id="@+id/bookCallNumber"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="B516.41 37"
-            />
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
 
-        <TextView
-            android:id="@+id/bookAuthor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="叔本华 (Schopenhauer, Arthur), 1788-1860 着"
-            />
+            <ImageView
+                android:id="@+id/bookCoverImageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                />
 
-        <TextView
-            android:id="@+id/bookISBN"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="978-7-229-09153-8 CNY32.80"
-            />
+            <LinearLayout
+                android:id="@+id/bookDetails"
+                android:padding="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:theme="@style/book_detail_text"
+                >
+
+                <TextView
+                    android:id="@+id/bookTitle"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="叔本华静心课"
+                    />
+
+                <TextView
+                    android:id="@+id/bookAuthor"
+                    android:paddingTop="4dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="叔本华 (Schopenhauer, Arthur), 1788-1860 着"
+                    />
+
+                <TextView
+                    android:id="@+id/bookISBN"
+                    android:paddingTop="4dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="978-7-229-09153-8"
+                    />
+                <TextView
+                    android:id="@+id/bookCallNumber"
+                    android:paddingTop="4dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="B516.41 37"
+                    />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <ListView
             android:id="@+id/bookStoreInfos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="?android:listDivider"
             >
         </ListView>
-   </LinearLayout>
+    </LinearLayout>
+
 
 
 </LinearLayout>

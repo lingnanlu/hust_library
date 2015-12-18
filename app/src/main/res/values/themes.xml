@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="IndigoTheme"
+           parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimary">@color/indigo_primary_500</item>
+        <item name="colorPrimaryDark">@color/indigo_primary_dark_700</item>
+        <item name="colorAccent">@color/indigo_accent_A200</item>
+
+    </style>
+
+
+    <style name="PinkTheme"
+           parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimary">@color/pink_primary_500</item>
+        <item name="colorPrimaryDark">@color/pink_primary_dark_700</item>
+        <item name="colorAccent">@color/pink_accent_A200</item>
+
+    </style>
+</resources>
