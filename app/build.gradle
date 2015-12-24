@@ -27,4 +27,6 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.7.0'
     compile 'org.jsoup:jsoup:1.8.2'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
