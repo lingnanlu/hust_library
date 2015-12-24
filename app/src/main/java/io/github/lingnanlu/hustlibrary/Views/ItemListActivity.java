@@ -255,9 +255,6 @@ public class ItemListActivity extends AppCompatActivity implements
             viewHolder.bookTitle.setText(item.getBookTitle());
 
 
-//            new BookCoverDownloaderTask(viewHolder.bookCover).
-
-
             //有的item没有封面imgeUrl会是/screen/xxxxx
             if(item.getImageUrl().startsWith("http")) {
 
