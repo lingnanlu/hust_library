@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/fortest/fortest.iml" filepath="$PROJECT_DIR$/fortest/fortest.iml" />
       <module fileurl="file://$PROJECT_DIR$/hust_library.iml" filepath="$PROJECT_DIR$/hust_library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/viewserver/viewserver.iml" filepath="$PROJECT_DIR$/viewserver/viewserver.iml" />
     </modules>
   </component>
 </project>

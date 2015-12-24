@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,8 +7,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="io.github.lingnanlu.hustlibrary.Views.ItemListActivity">
-    
-    <include layout="@layout/toolbar" />
+
+<include layout="@layout/toolbar" />
 
     <ListView
         android:id="@+id/listView"

@@ -8,15 +8,19 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.debug.hv.ViewServer;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -62,6 +66,9 @@ public class ItemListActivity extends AppCompatActivity implements
     @Bind(R.id.myToolbar)
     Toolbar mToolbar;
 
+//    @Bind(R.id.progressLayout)
+//    LinearLayout mProgressBarLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -78,10 +85,40 @@ public class ItemListActivity extends AppCompatActivity implements
         mListView.setOnScrollListener(this);
         mListView.setOnItemClickListener(this);
 
+        ProgressBar progressBar = new ProgressBar(this);
+        progressBar.setLayoutParams(new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER));
+
+        progressBar.setIndeterminate(true);
+        ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
+
+        root.addView(progressBar);
+
+        mListView.setEmptyView(progressBar);
+
+
         mKeyWord = getIntent().getStringExtra(MainActivity.DATA_KEYWORD);
 
 
         new ListViewInitTask().execute(mKeyWord);
+
+        ViewServer.get(this).addWindow(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        ViewServer.get(this).removeWindow(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ViewServer.get(this).setFocusedWindow(this);
     }
 
     @Override
@@ -128,6 +165,7 @@ public class ItemListActivity extends AppCompatActivity implements
      */
     private void onInitDataLoaded() {
 
+        // mProgressBarLayout.setVisibility(View.GONE);
         Log.d(TAG, "onInitDataLoaded: mBookItem size " + mBookItems.size());
         mListView.setAdapter(mItemAdapter);
         mHasLoaded = true;
@@ -288,6 +326,11 @@ public class ItemListActivity extends AppCompatActivity implements
 
     private class ListViewInitTask extends AsyncTask<String, Void,
             Void> {
+
+        @Override
+        protected void onPreExecute() {
+            // mProgressBarLayout.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected Void doInBackground(String... params) {
