@@ -29,8 +29,7 @@ public class RequestUrlBuilder {
 
     }
 
-    public static String build(String keyWord, int begin, int
-            totalCount) {
+    public static String build(String keyWord, int begin, int totalCount) {
 
         StringBuilder sb = new StringBuilder();
 

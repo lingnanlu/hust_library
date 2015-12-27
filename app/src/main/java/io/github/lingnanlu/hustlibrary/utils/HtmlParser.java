@@ -26,17 +26,14 @@ public class HtmlParser {
 
         SearchResultMetaInfo searchResultMetaInfo = new SearchResultMetaInfo();
 
-        Element metaData = document.select(".browseHeaderData")
-                .first();
+        Element metaData = document.select(".browseHeaderData").first();
 
         String content = metaData.text();
-
 
         int leftBracketIndex = content.indexOf('(');
         int minusIndex = content.indexOf('-');
         int gongIndex = content.indexOf('共');
         int rightBracketIndex = content.length() - 1;
-
 
         int begin = Integer.parseInt(content.substring(leftBracketIndex + 1, minusIndex));
         int end = Integer.parseInt(content.substring(minusIndex + 1, gongIndex - 1));
@@ -63,8 +60,7 @@ public class HtmlParser {
 
             Log.d(TAG, "" + count);
             BookAbstract bookAbstract = new BookAbstract();
-            bookAbstract.setImageUrl(
-                    book.select("td.briefcitExtras img").last().attr("src"));
+            bookAbstract.setImageUrl(book.select("td.briefcitExtras img").last().attr("src"));
 
             Element briefcitDetail = book.select("td.briefcitDetail").first();
 
@@ -86,11 +82,8 @@ public class HtmlParser {
             bookAbstract.setAuthor(string1.substring(0, string1.length() - string2.length()));
             bookAbstract.setPress(string2.substring(0, string2.length() - string3.length()));
 
-
             bookAbstracts.add(bookAbstract);
         }
-
-
 
         return bookAbstracts;
     }

@@ -49,11 +49,11 @@ public class BookAbstractsActivity extends AppCompatActivity implements
     public static final String EXTRA_BOOK_URL = "io.github.lingnanlu.hustlibrary.book_url";
     public static final String EXTRA_BOOK_COVER_URL =
             "io.github.lingnanlu.hustlibrary.book_cover_url";
-    private boolean mHasLoaded = false;
 
+    private boolean mHasLoaded = false;
     private OkHttpClient mClient = new OkHttpClient();
     private SearchResultMetaInfo mSearchResultMetaInfo;
-    private ArrayList<BookAbstract> mBookBookAbstracts;
+    private ArrayList<BookAbstract> mBookAbstracts;
     private ItemAdapter mItemAdapter;
     private String mKeyWord;
     private LoadMoreItemTask mPreTask;
@@ -87,17 +87,15 @@ public class BookAbstractsActivity extends AppCompatActivity implements
                         FrameLayout.LayoutParams.WRAP_CONTENT,
                         Gravity.CENTER)
         );
-
         progressBar.setIndeterminate(true);
         ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
-
         root.addView(progressBar);
-
         mListView.setEmptyView(progressBar);
 
         mKeyWord = getIntent().getStringExtra(MainActivity.EXTRA_KEYWORD);
 
         new ListViewInitTask().execute(mKeyWord);
+
 
         ViewServer.get(this).addWindow(this);
     }
@@ -153,8 +151,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
      */
     private void onInitDataLoaded() {
 
-        // mProgressBarLayout.setVisibility(View.GONE);
-        Log.d(TAG, "onInitDataLoaded: mBookItem size " + mBookBookAbstracts.size());
+        Log.d(TAG, "onInitDataLoaded: mBookItem size " + mBookAbstracts.size());
         mListView.setAdapter(mItemAdapter);
         mHasLoaded = true;
 
@@ -165,11 +162,11 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
         if (bookAbstracts != null) {
 
-            Log.d(TAG, "onMoreDataLoaded: Before mBookItem Size " + mBookBookAbstracts.size());
+            Log.d(TAG, "onMoreDataLoaded: Before mBookItem Size " + mBookAbstracts.size());
             Log.d(TAG, "onMoreDataLoaded: bookAbstracts size " + bookAbstracts.size());
-            mBookBookAbstracts.addAll(bookAbstracts);
+            mBookAbstracts.addAll(bookAbstracts);
 
-            Log.d(TAG, "onMoreDataLoaded: After mBookItem size " + mBookBookAbstracts.size());
+            Log.d(TAG, "onMoreDataLoaded: After mBookItem size " + mBookAbstracts.size());
             mItemAdapter.notifyDataSetChanged();
         }
 
@@ -214,9 +211,9 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
         @Override
         public int getCount() {
-            if (mBookBookAbstracts != null) {
+            if (mBookAbstracts != null) {
 
-                return mBookBookAbstracts.size();
+                return mBookAbstracts.size();
             }
 
             return 0;
@@ -226,9 +223,9 @@ public class BookAbstractsActivity extends AppCompatActivity implements
         @Override
         public Object getItem(int position) {
 
-            if (mBookBookAbstracts != null) {
+            if (mBookAbstracts != null) {
 
-                return mBookBookAbstracts.get(position);
+                return mBookAbstracts.get(position);
 
             }
 
@@ -265,7 +262,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
             }
 
-            BookAbstract bookAbstract = mBookBookAbstracts.get(position);
+            BookAbstract bookAbstract = mBookAbstracts.get(position);
 
             viewHolder.bookAuthor.setText(bookAbstract.getAuthor());
             viewHolder.bookPress.setText(bookAbstract.getPress());
@@ -297,17 +294,11 @@ public class BookAbstractsActivity extends AppCompatActivity implements
             TextView bookPress;
             NetworkImageView bookCover;
 
-
         }
     }
 
     private class ListViewInitTask extends AsyncTask<String, Void,
             Void> {
-
-        @Override
-        protected void onPreExecute() {
-            // mProgressBarLayout.setVisibility(View.VISIBLE);
-        }
 
         @Override
         protected Void doInBackground(String... params) {
@@ -318,7 +309,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
             Log.d(TAG, requestUrl);
             Request request = new Request.Builder().url(requestUrl).build();
 
-            Response response;
+            Response response = null;
             try {
                 response = mClient.newCall(request).execute();
 
@@ -330,7 +321,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
                 // TODO: 2015/12/14
                 // 解析结果时，暂时还未fill keyWord
                 mSearchResultMetaInfo.setKeyWord(mKeyWord);
-                mBookBookAbstracts = HtmlParser.parseBookAbstracts(content);
+                mBookAbstracts = HtmlParser.parseBookAbstracts(content);
 
             } catch (IOException e) {
                 e.printStackTrace();

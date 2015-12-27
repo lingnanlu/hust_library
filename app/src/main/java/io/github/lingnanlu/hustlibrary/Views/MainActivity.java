@@ -68,9 +68,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onClick(View v) {
 
         Intent intent = new Intent(this,BookAbstractsActivity.class);
-
         intent.putExtra(EXTRA_KEYWORD, mSearchBox.getText().toString());
-
         startActivity(intent);
 
     }
