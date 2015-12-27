@@ -3,7 +3,7 @@ package io.github.lingnanlu.hustlibrary.model;
 /**
  * Created by Administrator on 2015/12/9.
  */
-public class Item {
+public class BookAbstract {
 
     private String mUrl;
     private String mBookTitle;

@@ -5,7 +5,7 @@ import io.github.lingnanlu.hustlibrary.utils.RequestUrlBuilder;
 /**
  * Created by Rico on 2015/12/13.
  */
-public class Result {
+public class SearchResultMetaInfo {
 
     private String mKeyWord;
 

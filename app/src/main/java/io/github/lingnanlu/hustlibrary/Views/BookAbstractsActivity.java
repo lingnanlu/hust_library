@@ -35,16 +35,16 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.github.lingnanlu.hustlibrary.R;
-import io.github.lingnanlu.hustlibrary.model.Item;
-import io.github.lingnanlu.hustlibrary.model.Result;
+import io.github.lingnanlu.hustlibrary.model.BookAbstract;
+import io.github.lingnanlu.hustlibrary.model.SearchResultMetaInfo;
 import io.github.lingnanlu.hustlibrary.utils.BitmapCache;
 import io.github.lingnanlu.hustlibrary.utils.HtmlParser;
 import io.github.lingnanlu.hustlibrary.utils.RequestUrlBuilder;
 
-public class ItemListActivity extends AppCompatActivity implements
+public class BookAbstractsActivity extends AppCompatActivity implements
         AbsListView.OnScrollListener, AdapterView.OnItemClickListener{
 
-    private static final String TAG = "ItemListActivity";
+    private static final String TAG = "BookAbstractsActivity";
 
     public static final String BOOK_URL = "io.github.lingnanlu" +
             ".hustlibrary.book_url";
@@ -54,8 +54,8 @@ public class ItemListActivity extends AppCompatActivity implements
     private boolean mHasLoaded = false;
 
     private OkHttpClient mClient = new OkHttpClient();
-    private Result mResult;
-    private ArrayList<Item> mBookItems;
+    private SearchResultMetaInfo mSearchResultMetaInfo;
+    private ArrayList<BookAbstract> mBookBookAbstracts;
     private ItemAdapter mItemAdapter;
     private String mKeyWord;
     private LoadMoreItemTask mPreTask;
@@ -151,7 +151,7 @@ public class ItemListActivity extends AppCompatActivity implements
 
                 LoadMoreItemTask task = new LoadMoreItemTask();
                 mPreTask = task;
-                task.execute(mResult.nextPageUrl());
+                task.execute(mSearchResultMetaInfo.nextPageUrl());
 
             }
         }
@@ -166,24 +166,24 @@ public class ItemListActivity extends AppCompatActivity implements
     private void onInitDataLoaded() {
 
         // mProgressBarLayout.setVisibility(View.GONE);
-        Log.d(TAG, "onInitDataLoaded: mBookItem size " + mBookItems.size());
+        Log.d(TAG, "onInitDataLoaded: mBookItem size " + mBookBookAbstracts.size());
         mListView.setAdapter(mItemAdapter);
         mHasLoaded = true;
 
     }
 
-    private void onMoreDataLoaded(ArrayList<Item> items) {
+    private void onMoreDataLoaded(ArrayList<BookAbstract> bookAbstracts) {
 
 
-        if(items != null) {
+        if(bookAbstracts != null) {
 
             Log.d(TAG, "onMoreDataLoaded: Before mBookItem Size " +
-                    mBookItems.size());
-            Log.d(TAG, "onMoreDataLoaded: items size " + items.size());
-            mBookItems.addAll(items);
+                    mBookBookAbstracts.size());
+            Log.d(TAG, "onMoreDataLoaded: bookAbstracts size " + bookAbstracts.size());
+            mBookBookAbstracts.addAll(bookAbstracts);
 
             Log.d(TAG, "onMoreDataLoaded: After mBookItem size " +
-                    mBookItems.size());
+                    mBookBookAbstracts.size());
             mItemAdapter.notifyDataSetChanged();
         }
 
@@ -198,15 +198,15 @@ public class ItemListActivity extends AppCompatActivity implements
         //不能直接使用adapter的getItem方法
         //注意position和id在有header和footer时不同。
 
-        Item item = (Item) parent.getItemAtPosition(position);
+        BookAbstract bookAbstract = (BookAbstract) parent.getItemAtPosition(position);
 
 
-        if(item != null) {
+        if(bookAbstract != null) {
             Intent intent = new Intent(this,BookDetailActivity.class);
 
             String prefix = "http://ftp.lib.hust.edu.cn";
-            intent.putExtra(BOOK_URL, prefix + item.getUrl());
-            intent.putExtra(BOOK_COVER_URL, item.getImageUrl());
+            intent.putExtra(BOOK_URL, prefix + bookAbstract.getUrl());
+            intent.putExtra(BOOK_COVER_URL, bookAbstract.getImageUrl());
 
             startActivity(intent);
         }
@@ -228,9 +228,9 @@ public class ItemListActivity extends AppCompatActivity implements
 
         @Override
         public int getCount() {
-            if(mBookItems != null) {
+            if(mBookBookAbstracts != null) {
 
-                return mBookItems.size();
+                return mBookBookAbstracts.size();
             }
 
             return 0;
@@ -240,9 +240,9 @@ public class ItemListActivity extends AppCompatActivity implements
         @Override
         public Object getItem(int position) {
 
-            if(mBookItems != null) {
+            if(mBookBookAbstracts != null) {
 
-                return mBookItems.get(position);
+                return mBookBookAbstracts.get(position);
 
             }
 
@@ -286,25 +286,25 @@ public class ItemListActivity extends AppCompatActivity implements
 
             }
 
-            Item item = mBookItems.get(position);
+            BookAbstract bookAbstract = mBookBookAbstracts.get(position);
 
-            viewHolder.bookAuthor.setText(item.getAuthor());
-            viewHolder.bookPress.setText(item.getPress());
-            viewHolder.bookTitle.setText(item.getBookTitle());
+            viewHolder.bookAuthor.setText(bookAbstract.getAuthor());
+            viewHolder.bookPress.setText(bookAbstract.getPress());
+            viewHolder.bookTitle.setText(bookAbstract.getBookTitle());
 
 
             //有的item没有封面imgeUrl会是/screen/xxxxx
-            if(item.getImageUrl().startsWith("http")) {
+            if(bookAbstract.getImageUrl().startsWith("http")) {
 
-//                Picasso.with(ItemListActivity.this)
-//                        .load(item.getImageUrl())
+//                Picasso.with(BookAbstractsActivity.this)
+//                        .load(bookAbstract.getImageUrl())
 //                        .placeholder(R.drawable.ic_book_black_36dp)
 //                        .error(R.drawable.ic_book_black_36dp)
 //                        .into(viewHolder.bookCover);
 
                 viewHolder.bookCover.setDefaultImageResId(R.drawable
                         .ic_book_black_36dp);
-                viewHolder.bookCover.setImageUrl(item.getImageUrl(),
+                viewHolder.bookCover.setImageUrl(bookAbstract.getImageUrl(),
                         mImageLoader);
 
             }
@@ -350,12 +350,12 @@ public class ItemListActivity extends AppCompatActivity implements
 
 
                     String content = response.body().string();
-                    mResult = HtmlParser.parseResult(content);
+                    mSearchResultMetaInfo = HtmlParser.parseMetaInfo(content);
 
                     // TODO: 2015/12/14
                     // 解析结果时，暂时还未fill keyWord
-                    mResult.setKeyWord(mKeyWord);
-                    mBookItems = HtmlParser.parseItems(content);
+                    mSearchResultMetaInfo.setKeyWord(mKeyWord);
+                    mBookBookAbstracts = HtmlParser.parseItems(content);
 
 
             } catch (IOException e) {
@@ -374,11 +374,11 @@ public class ItemListActivity extends AppCompatActivity implements
     }
 
     private class LoadMoreItemTask extends AsyncTask<String, Void,
-            ArrayList<Item>> {
+            ArrayList<BookAbstract>> {
 
         private static final String TAG = "LoadMoreItemTask";
         @Override
-        protected ArrayList<Item> doInBackground(String... params) {
+        protected ArrayList<BookAbstract> doInBackground(String... params) {
 
 
             if(params[0] != null) {
@@ -406,9 +406,10 @@ public class ItemListActivity extends AppCompatActivity implements
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Item> items) {
+        protected void onPostExecute(ArrayList<BookAbstract>
+                                                     bookAbstracts) {
 
-            onMoreDataLoaded(items);
+            onMoreDataLoaded(bookAbstracts);
         }
     }
 

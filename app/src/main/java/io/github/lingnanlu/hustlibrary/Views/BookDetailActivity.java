@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.github.lingnanlu.hustlibrary.R;
-import io.github.lingnanlu.hustlibrary.model.Book;
+import io.github.lingnanlu.hustlibrary.model.BookDetail;
 import io.github.lingnanlu.hustlibrary.utils.HtmlParser;
 
 public class BookDetailActivity extends AppCompatActivity {
@@ -71,10 +71,10 @@ public class BookDetailActivity extends AppCompatActivity {
         mClient = new OkHttpClient();
 
         String bookInfoUrl = getIntent().getStringExtra
-                (ItemListActivity
+                (BookAbstractsActivity
                 .BOOK_URL);
         String bookCoverUrl = getIntent().getStringExtra
-                (ItemListActivity.BOOK_COVER_URL);
+                (BookAbstractsActivity.BOOK_COVER_URL);
 
         new BookInfoLoadTask().execute(bookInfoUrl, bookCoverUrl);
 
@@ -84,15 +84,15 @@ public class BookDetailActivity extends AppCompatActivity {
 
     }
 
-    private void onBookInfoLoaded(Book book){
+    private void onBookInfoLoaded(BookDetail bookDetail){
 
-        mBookTitle.setText(book.getTitle());
-        mBookAuthor.setText(book.getAuthor());
-        mBookCallNumber.setText(book.getCallNumber());
-        mBookISBN.setText(book.getISBN());
-        mBookCover.setImageBitmap(book.getCover());
+        mBookTitle.setText(bookDetail.getTitle());
+        mBookAuthor.setText(bookDetail.getAuthor());
+        mBookCallNumber.setText(bookDetail.getCallNumber());
+        mBookISBN.setText(bookDetail.getISBN());
+        mBookCover.setImageBitmap(bookDetail.getCover());
 
-        BookStoreInfoAdapter adapter = new BookStoreInfoAdapter(book);
+        BookStoreInfoAdapter adapter = new BookStoreInfoAdapter(bookDetail);
 
         /*
         findViewById() only works to find subviews of the object View. It will not work on a layout id.
@@ -111,9 +111,9 @@ public class BookDetailActivity extends AppCompatActivity {
         private ArrayList<String[]> mBookStoreInfos;
         private LayoutInflater inflater;
 
-        public BookStoreInfoAdapter(Book book) {
+        public BookStoreInfoAdapter(BookDetail bookDetail) {
 
-            mBookStoreInfos = book.getStoreInfos();
+            mBookStoreInfos = bookDetail.getStoreInfos();
             inflater = LayoutInflater.from(BookDetailActivity.this);
 
         }
@@ -162,10 +162,10 @@ public class BookDetailActivity extends AppCompatActivity {
 
     }
     private class BookInfoLoadTask extends
-    AsyncTask<String, Void, Book>{
+    AsyncTask<String, Void, BookDetail>{
 
         @Override
-        protected Book doInBackground(String... params) {
+        protected BookDetail doInBackground(String... params) {
 
             String bookInfoUrl = params[0];
             String bookCoverUrl = params[1];
@@ -178,14 +178,14 @@ public class BookDetailActivity extends AppCompatActivity {
                     .build();
 
             Response response = null;
-            Book book = null;
+            BookDetail bookDetail = null;
 
             try {
                 response = mClient.newCall(bookInfoRequest).execute();
 
                 if(response != null) {
 
-                    book = HtmlParser.parseBook(response.body().string());
+                    bookDetail = HtmlParser.parseBook(response.body().string());
 
                 }
 
@@ -197,11 +197,11 @@ public class BookDetailActivity extends AppCompatActivity {
                 if (in != null) {
 
                     Bitmap bookCover = BitmapFactory.decodeStream(in);
-                    book.setCover(bookCover);
+                    bookDetail.setCover(bookCover);
 
                 }
 
-                return book;
+                return bookDetail;
 
             } catch (IOException e) {
                 Log.d(TAG, "get response error " + e);
@@ -212,8 +212,8 @@ public class BookDetailActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Book book) {
-            onBookInfoLoaded(book);
+        protected void onPostExecute(BookDetail bookDetail) {
+            onBookInfoLoaded(bookDetail);
         }
 
     }

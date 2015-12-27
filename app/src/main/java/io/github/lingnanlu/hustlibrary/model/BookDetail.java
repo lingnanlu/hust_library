@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by Rico on 2015/12/9.
  */
-public class Book {
+public class BookDetail {
 
     private String mTitle;
     private String mAuthor;

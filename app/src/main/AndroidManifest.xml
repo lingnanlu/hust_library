@@ -20,7 +20,7 @@
         </activity>
 
         <activity
-            android:name=".Views.ItemListActivity"
+            android:name=".Views.BookAbstractsActivity"
             android:parentActivityName=".Views.MainActivity"
             android:label="@string/listView_activity_name"
             >
@@ -32,7 +32,7 @@
 
         <activity
             android:name=".Views.BookDetailActivity"
-            android:parentActivityName=".Views.ItemListActivity"
+            android:parentActivityName=".Views.BookAbstractsActivity"
             android:label="Book Detail"
             >
 

@@ -9,8 +9,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import io.github.lingnanlu.hustlibrary.model.Book;
-import io.github.lingnanlu.hustlibrary.model.Result;
+import io.github.lingnanlu.hustlibrary.model.BookDetail;
+import io.github.lingnanlu.hustlibrary.model.SearchResultMetaInfo;
 
 import static org.junit.Assert.assertEquals;
 
@@ -39,12 +39,12 @@ public class HtmlParserTest {
 
         Response response = mClient.newCall(request).execute();
 
-        Result result = HtmlParser.parseResult(response.body()
+        SearchResultMetaInfo searchResultMetaInfo = HtmlParser.parseResult(response.body()
                 .string());
 
-        assertEquals(1, result.getBegin());
-        assertEquals(50, result.getEnd());
-        assertEquals(87, result.getTotalCount());
+        assertEquals(1, searchResultMetaInfo.getBegin());
+        assertEquals(50, searchResultMetaInfo.getEnd());
+        assertEquals(87, searchResultMetaInfo.getTotalCount());
 
     }
 
@@ -57,26 +57,26 @@ public class HtmlParserTest {
 
         Response response = mClient.newCall(request).execute();
 
-        Result result = HtmlParser.parseResult(response.body()
+        SearchResultMetaInfo searchResultMetaInfo = HtmlParser.parseResult(response.body()
                 .string());
 
-        result.setKeyWord("叔本华");
+        searchResultMetaInfo.setKeyWord("叔本华");
 
 //        String url = "http://ftp.lib.hust.edu" +
 //                ".cn/search*chx?/X{u53D4}{u672C}{u534E}&SORT=D/X
 // {u53D4}{u672C" +
 //                "}{u534E}&SORT=D&SUBKEY=%E5%8F%94%E6%9C%AC%E5%8D
 // %8E/1%2C87%2C87%2CB/browse";
-        request = new Request.Builder().url(result
+        request = new Request.Builder().url(searchResultMetaInfo
                 .nextPageUrl()).build();
 
         Response html = mClient.newCall(request).execute();
 
-        result = HtmlParser.parseResult(html.body().string());
+        searchResultMetaInfo = HtmlParser.parseResult(html.body().string());
 
-        assertEquals(51, result.getBegin());
-        assertEquals(87, result.getEnd());
-        assertEquals(87, result.getTotalCount());
+        assertEquals(51, searchResultMetaInfo.getBegin());
+        assertEquals(87, searchResultMetaInfo.getEnd());
+        assertEquals(87, searchResultMetaInfo.getTotalCount());
 
     }
 
@@ -94,20 +94,20 @@ public class HtmlParserTest {
                 .execute();
 
         //System.out.println(response.body().string());
-        Book book = HtmlParser.parseBook(response.body().string());
+        BookDetail bookDetail = HtmlParser.parseBook(response.body().string());
 
-        assertEquals("叔本华静心课 / (德) 叔本华著", book.getTitle());
-        assertEquals("B516.41 37", book.getCallNumber());
+        assertEquals("叔本华静心课 / (德) 叔本华著", bookDetail.getTitle());
+        assertEquals("B516.41 37", bookDetail.getCallNumber());
         assertEquals("叔本华 (Schopenhauer, Arthur), 1788-1860 著",
-                book.getAuthor());
-        assertEquals("978-7-229-09153-8 CNY32.80", book.getISBN());
+                bookDetail.getAuthor());
+        assertEquals("978-7-229-09153-8 CNY32.80", bookDetail.getISBN());
 
-        assertEquals("中文图书阅览室（C区2楼，3楼，5楼）", book.getStoreInfos()
+        assertEquals("中文图书阅览室（C区2楼，3楼，5楼）", bookDetail.getStoreInfos()
                 .get(0)[0]);
-        assertEquals("馆内阅览", book.getStoreInfos().get(0)[2]);
-        assertEquals("流通书库(B区)", book.getStoreInfos().get
+        assertEquals("馆内阅览", bookDetail.getStoreInfos().get(0)[2]);
+        assertEquals("流通书库(B区)", bookDetail.getStoreInfos().get
                 (1)[0]);
-        assertEquals("在架上", book.getStoreInfos().get
+        assertEquals("在架上", bookDetail.getStoreInfos().get
                 (1)[2]);
 
 
@@ -126,36 +126,36 @@ public class HtmlParserTest {
                 .execute();
 
         //System.out.println(response.body().string());
-        Book book = HtmlParser.parseBook(response.body().string());
+        BookDetail bookDetail = HtmlParser.parseBook(response.body().string());
 
-        assertEquals("Effective C++ : 55 specific ways to improve your programs and designs = 改善程序与设计的55个具体做法 / Scott Meyers.", book.getTitle());
-        assertEquals("TP312C++ W47/3A", book.getCallNumber());
+        assertEquals("Effective C++ : 55 specific ways to improve your programs and designs = 改善程序与设计的55个具体做法 / Scott Meyers.", bookDetail.getTitle());
+        assertEquals("TP312C++ W47/3A", bookDetail.getCallNumber());
         assertEquals("Meyers, Scott (Scott Douglas)",
-                book.getAuthor());
-        assertEquals("9787121133763", book.getISBN());
+                bookDetail.getAuthor());
+        assertEquals("9787121133763", bookDetail.getISBN());
 
-        assertEquals("外文图书阅览室（B608）", book.getStoreInfos()
+        assertEquals("外文图书阅览室（B608）", bookDetail.getStoreInfos()
                 .get(0)[0]);
-        assertEquals("馆内阅览", book.getStoreInfos().get(0)[2]);
+        assertEquals("馆内阅览", bookDetail.getStoreInfos().get(0)[2]);
 
-        assertEquals("流通书库(B区)", book.getStoreInfos().get
+        assertEquals("流通书库(B区)", bookDetail.getStoreInfos().get
                 (1)[0]);
-        assertEquals("在架上", book.getStoreInfos().get
+        assertEquals("在架上", bookDetail.getStoreInfos().get
                 (1)[2]);
 
-        assertEquals("流通书库(B区)", book.getStoreInfos().get
+        assertEquals("流通书库(B区)", bookDetail.getStoreInfos().get
                 (2)[0]);
-        assertEquals("上架中", book.getStoreInfos().get
+        assertEquals("上架中", bookDetail.getStoreInfos().get
                 (2)[2]);
 
-        assertEquals("东校区分馆阅览室", book.getStoreInfos().get
+        assertEquals("东校区分馆阅览室", bookDetail.getStoreInfos().get
                 (3)[0]);
-        assertEquals("馆内阅览", book.getStoreInfos().get
+        assertEquals("馆内阅览", bookDetail.getStoreInfos().get
                 (3)[2]);
 
-        assertEquals("东校区分馆借还处", book.getStoreInfos().get
+        assertEquals("东校区分馆借还处", bookDetail.getStoreInfos().get
                 (4)[0]);
-        assertEquals("到期 15-12-22", book.getStoreInfos().get
+        assertEquals("到期 15-12-22", bookDetail.getStoreInfos().get
                 (4)[2]);
 
 

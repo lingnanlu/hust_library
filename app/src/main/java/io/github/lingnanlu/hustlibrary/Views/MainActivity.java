@@ -69,7 +69,7 @@ public class MainActivity
     @Override
     public void onClick(View v) {
 
-        Intent intent = new Intent(this,ItemListActivity.class);
+        Intent intent = new Intent(this,BookAbstractsActivity.class);
 
         intent.putExtra(DATA_KEYWORD, mSearchBox.getText().toString());
 
