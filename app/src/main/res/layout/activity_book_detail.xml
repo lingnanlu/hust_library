@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,69 +10,62 @@
 
     <include layout="@layout/toolbar" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
         android:orientation="vertical"
-
         >
 
+        <ImageView
+            android:id="@+id/image_book_cover"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentLeft="true"
+            />
+
+
         <LinearLayout
+            android:id="@+id/section_book_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
+            android:layout_toRightOf="@id/image_book_cover"
+            android:padding="8dp"
+            android:orientation="vertical"
+            android:theme="@style/book_detail_text"
             >
 
-            <ImageView
-                android:id="@+id/image_book_cover"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                />
-
-            <LinearLayout
-                android:id="@+id/section_book_detail"
+            <TextView
+                android:id="@+id/text_book_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:orientation="vertical"
-                android:theme="@style/book_detail_text"
-                >
+                android:textAppearance="?android:textAppearanceMedium"
+                tools:text="叔本华静心课"
+                />
 
-                <TextView
-                    android:id="@+id/text_book_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:textAppearanceMedium"
-                    tools:text="叔本华静心课"
-                    />
+            <TextView
+                android:id="@+id/text_book_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                tools:text="叔本华 (Schopenhauer, Arthur), 1788-1860 着"
+                />
 
-                <TextView
-                    android:id="@+id/text_book_author"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="4dp"
-                    tools:text="叔本华 (Schopenhauer, Arthur), 1788-1860 着"
-                    />
+            <TextView
+                android:id="@+id/text_book_ISBN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                tools:text="978-7-229-09153-8"
+                />
 
-                <TextView
-                    android:id="@+id/text_book_ISBN"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="4dp"
-                    tools:text="978-7-229-09153-8"
-                    />
-
-                <TextView
-                    android:id="@+id/text_book_CallNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="4dp"
-                    tools:text="B516.41 37"
-                    />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/text_book_CallNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                tools:text="B516.41 37"
+                />
 
         </LinearLayout>
 
@@ -79,9 +73,10 @@
             android:id="@+id/list_book_StoreInfos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/section_book_detail"
             android:divider="?android:listDivider"
             />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>
