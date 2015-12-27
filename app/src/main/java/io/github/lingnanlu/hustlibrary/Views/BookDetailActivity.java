@@ -179,7 +179,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
                 if(response != null) {
 
-                    bookDetail = HtmlParser.parseBook(response.body().string());
+                    bookDetail = HtmlParser.parseBookDetail(response.body().string());
 
                 }
 

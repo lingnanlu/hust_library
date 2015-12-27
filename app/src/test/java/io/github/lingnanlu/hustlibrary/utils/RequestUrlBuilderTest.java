@@ -21,7 +21,7 @@ public class RequestUrlBuilderTest {
 
 
     @Test
-    public void test_init_keyword_only_chinese() throws Exception {
+    public void build_first_keyword_only_chinese() throws Exception {
 
         String actual = mRequestUrlBuilder.build("叔本华");
 
@@ -34,7 +34,7 @@ public class RequestUrlBuilderTest {
 
 
     @Test
-    public void test_keyword_only_chinese() throws Exception {
+    public void build_keyword_only_chinese() throws Exception {
 
         String actual = mRequestUrlBuilder.build("叔本华", 1, 87);
 
@@ -49,7 +49,7 @@ public class RequestUrlBuilderTest {
 
 
     @Test
-    public void test_keyword_chinese_english_mix() throws Exception {
+    public void build_keyword_chinese_english_mix() throws Exception {
 
         String actual = mRequestUrlBuilder.build("java编程", 1, 1807);
 
@@ -64,7 +64,7 @@ public class RequestUrlBuilderTest {
 
 
     @Test
-    public void test_init_keyword_punctuations() throws Exception {
+    public void build_first_keyword_punctuations() throws Exception {
 
         String actual = mRequestUrlBuilder.build("C++");
 
@@ -75,7 +75,7 @@ public class RequestUrlBuilderTest {
     }
 
     @Test
-    public void test_keyword_punctuations() throws Exception {
+    public void build_keyword_punctuations() throws Exception {
 
         String actual = mRequestUrlBuilder.build("C++", 1, 2090);
 
@@ -88,7 +88,7 @@ public class RequestUrlBuilderTest {
     }
 
     @Test
-    public void test_keyword_chinese_number_mix() throws Exception {
+    public void build_keyword_chinese_number_mix() throws Exception {
 
         String actual = mRequestUrlBuilder.build("第2版", 1, 1037);
 

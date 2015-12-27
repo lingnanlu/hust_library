@@ -51,7 +51,7 @@ public class HtmlParser {
 
     }
 
-    public static ArrayList<BookAbstract> parseItems(String html) {
+    public static ArrayList<BookAbstract> parseBookAbstracts(String html) {
 
         ArrayList<BookAbstract> bookAbstracts = new ArrayList<>();
 
@@ -95,7 +95,7 @@ public class HtmlParser {
         return bookAbstracts;
     }
 
-    public static BookDetail parseBook(String html) {
+    public static BookDetail parseBookDetail(String html) {
 
         BookDetail bookDetail = new BookDetail();
 

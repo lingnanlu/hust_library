@@ -329,7 +329,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
                 // TODO: 2015/12/14
                 // 解析结果时，暂时还未fill keyWord
                 mSearchResultMetaInfo.setKeyWord(mKeyWord);
-                mBookBookAbstracts = HtmlParser.parseItems(content);
+                mBookBookAbstracts = HtmlParser.parseBookAbstracts(content);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -363,7 +363,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
                     if (response != null) {
 
                         String content = response.body().string();
-                        return HtmlParser.parseItems(content);
+                        return HtmlParser.parseBookAbstracts(content);
 
                     }
                 } catch (IOException e) {
