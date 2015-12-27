@@ -9,23 +9,22 @@
     >
 
     <TextView
-        android:id="@+id/location"
+        android:id="@+id/text_location"
         android:layout_width="0dp"
         android:layout_weight="0.6"
         android:layout_height="wrap_content"
-        tools:text="流通书库(B区)"
         android:textAppearance="?android:textAppearanceListItem"
-
+        tools:text="流通书库(B区)"
         />
 
     <TextView
-        android:id="@+id/state"
+        android:id="@+id/text_status"
         android:layout_width="0dp"
         android:layout_weight="0.4"
         android:layout_height="wrap_content"
         android:gravity="right"
-        tools:text="馆内阅览"
         android:textAppearance="?android:textAppearanceListItem"
+        tools:text="馆内阅览"
         />
     
 </LinearLayout>

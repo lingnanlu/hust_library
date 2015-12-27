@@ -21,13 +21,13 @@ public class MainActivity extends AppCompatActivity implements
     private static final String TAG = "MainActivity";
     public static final String EXTRA_KEYWORD = "io.github.lingnanlu.hustlibrary.keyword";
 
-    @Bind(R.id.searchBox)
+    @Bind(R.id.et_searchBox)
     EditText mSearchBox;
 
-    @Bind(R.id.searchImageButton)
+    @Bind(R.id.iBtn_searchButton)
     ImageButton mSearchImageButton;
 
-    @Bind(R.id.catagorySpinner)
+    @Bind(R.id.spinner_searchBy)
     Spinner mCatagorySelector;
 
 //    @Bind(R.id.myToolbar)

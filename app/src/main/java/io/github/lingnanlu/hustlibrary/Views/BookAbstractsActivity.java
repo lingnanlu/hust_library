@@ -58,10 +58,10 @@ public class BookAbstractsActivity extends AppCompatActivity implements
     private String mKeyWord;
     private LoadMoreItemTask mPreTask;
 
-    @Bind(R.id.listView)
+    @Bind(R.id.list_book_abstracts)
     ListView mListView;
 
-    @Bind(R.id.myToolbar)
+    @Bind(R.id.toolbar_custom)
     Toolbar mToolbar;
 
     @Override
@@ -251,10 +251,10 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
                 viewHolder = new ViewHolder();
 
-                viewHolder.bookAuthor = (TextView) convertView.findViewById(R.id.bookAuthor);
-                viewHolder.bookTitle = (TextView) convertView.findViewById(R.id.bookTitle);
-                viewHolder.bookPress = (TextView) convertView.findViewById(R.id.bookPress);
-                viewHolder.bookCover = (NetworkImageView) convertView.findViewById(R.id.bookCover);
+                viewHolder.bookAuthor = (TextView) convertView.findViewById(R.id.text_book_author);
+                viewHolder.bookTitle = (TextView) convertView.findViewById(R.id.text_book_title);
+                viewHolder.bookPress = (TextView) convertView.findViewById(R.id.text_book_press);
+                viewHolder.bookCover = (NetworkImageView) convertView.findViewById(R.id.image_book_cover);
 
                 convertView.setTag(viewHolder);
 

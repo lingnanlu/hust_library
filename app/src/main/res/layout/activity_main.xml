@@ -9,7 +9,7 @@
     tools:context="io.github.lingnanlu.hustlibrary.Views.MainActivity">
 
     <ImageView
-        android:id="@+id/logo"
+        android:id="@+id/image_logo"
         android:layout_height="100dp"
         android:layout_width="100dp"
         android:src="@drawable/ic_copyright_black_48dp"
@@ -23,7 +23,7 @@
         >
 
         <Spinner
-            android:id="@+id/catagorySpinner"
+            android:id="@+id/spinner_searchBy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -31,20 +31,21 @@
             />
 
         <EditText
-            android:id="@+id/searchBox"
+            android:id="@+id/et_searchBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
             />
 
         <ImageButton
-            android:id="@+id/searchImageButton"
+            android:id="@+id/iBtn_searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_search_black_48dp"/>
-    </LinearLayout>
+            android:src="@drawable/ic_search_black_48dp"
+            />
 
+    </LinearLayout>
 
 </LinearLayout>
 

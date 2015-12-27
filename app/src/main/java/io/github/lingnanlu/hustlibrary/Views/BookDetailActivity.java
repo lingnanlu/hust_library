@@ -36,25 +36,25 @@ public class BookDetailActivity extends AppCompatActivity {
 
     private OkHttpClient mClient;
 
-    @Bind(R.id.bookCoverImageView)
+    @Bind(R.id.image_book_cover)
     ImageView mBookCover;
 
-    @Bind(R.id.bookTitle)
+    @Bind(R.id.text_book_title)
     TextView mBookTitle;
 
-    @Bind(R.id.bookCallNumber)
+    @Bind(R.id.text_book_CallNumber)
     TextView mBookCallNumber;
 
-    @Bind(R.id.bookAuthor)
+    @Bind(R.id.text_book_author)
     TextView mBookAuthor;
 
-    @Bind(R.id.bookISBN)
+    @Bind(R.id.text_book_ISBN)
     TextView mBookISBN;
 
-    @Bind(R.id.bookStoreInfos)
+    @Bind(R.id.list_book_StoreInfos)
     ListView mBookStoreInfos;
 
-    @Bind(R.id.myToolbar)
+    @Bind(R.id.toolbar_custom)
     Toolbar mToolbar;
 
     @Override
@@ -145,8 +145,8 @@ public class BookDetailActivity extends AppCompatActivity {
 
             View container = inflater.inflate(R.layout.item_book_store_info, null);
 
-            TextView location = (TextView) container.findViewById(R.id.location);
-            TextView state = (TextView) container.findViewById(R.id.state);
+            TextView location = (TextView) container.findViewById(R.id.text_location);
+            TextView state = (TextView) container.findViewById(R.id.text_status);
 
             location.setText(mBookStoreInfos.get(position)[0]);
             state.setText(mBookStoreInfos.get(position)[2]);

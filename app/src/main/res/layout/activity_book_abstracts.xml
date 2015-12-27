@@ -6,16 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Views.BookAbstractsActivity">
+    tools:context=".Views.BookAbstractsActivity"
+    >
 
 <include layout="@layout/toolbar" />
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/list_book_abstracts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="?android:listDivider"
-        >
-    </ListView>
+        />
 
 </LinearLayout>

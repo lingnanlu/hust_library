@@ -2,7 +2,7 @@
 
 
 <LinearLayout
-    android:id="@+id/listItem"
+    android:id="@+id/section_abstract"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,7 +13,7 @@
     >
 
     <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/bookCover"
+        android:id="@+id/image_book_cover"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginRight="6dp"
@@ -27,7 +27,7 @@
         >
 
         <TextView
-            android:id="@+id/bookTitle"
+            android:id="@+id/text_book_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:textAppearanceMedium"
@@ -36,7 +36,7 @@
             />
 
         <TextView
-            android:id="@+id/bookAuthor"
+            android:id="@+id/text_book_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
@@ -45,14 +45,13 @@
             />
 
         <TextView
-            android:id="@+id/bookPress"
+            android:id="@+id/text_book_press"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:textAppearance="?android:textAppearanceSmall"
             tools:text="重庆出版社"
             />
-
 
     </LinearLayout>
 
