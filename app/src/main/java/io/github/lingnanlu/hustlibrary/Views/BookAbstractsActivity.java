@@ -47,12 +47,10 @@ public class BookAbstractsActivity extends AppCompatActivity
         .OnItemClickListener {
 
     private static final String TAG = "BookAbstractsActivity";
-
-    public static final String BOOK_URL = "io.github.lingnanlu" +
+    public static final String EXTRA_BOOK_URL = "io.github.lingnanlu" +
             ".hustlibrary.book_url";
-    public static final String BOOK_COVER_URL = "io.github" +
-            ".lingnanlu" +
-            ".hustlibrary.book_cover_url";
+    public static final String EXTRA_BOOK_COVER_URL = "io.github" +
+            ".lingnanlu" + ".hustlibrary.book_cover_url";
     private boolean mHasLoaded = false;
 
     private OkHttpClient mClient = new OkHttpClient();
@@ -67,9 +65,6 @@ public class BookAbstractsActivity extends AppCompatActivity
 
     @Bind(R.id.myToolbar)
     Toolbar mToolbar;
-
-//    @Bind(R.id.progressLayout)
-//    LinearLayout mProgressBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +98,7 @@ public class BookAbstractsActivity extends AppCompatActivity
 
 
         mKeyWord = getIntent().getStringExtra(MainActivity
-                .DATA_KEYWORD);
+                .EXTRA_KEYWORD);
 
 
         new ListViewInitTask().execute(mKeyWord);
@@ -112,17 +107,17 @@ public class BookAbstractsActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        ViewServer.get(this).removeWindow(this);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 
         ViewServer.get(this).setFocusedWindow(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        ViewServer.get(this).removeWindow(this);
     }
 
     @Override
@@ -216,8 +211,8 @@ public class BookAbstractsActivity extends AppCompatActivity
                     .class);
 
             String prefix = "http://ftp.lib.hust.edu.cn";
-            intent.putExtra(BOOK_URL, prefix + bookAbstract.getUrl());
-            intent.putExtra(BOOK_COVER_URL, bookAbstract
+            intent.putExtra(EXTRA_BOOK_URL, prefix + bookAbstract.getUrl());
+            intent.putExtra(EXTRA_BOOK_COVER_URL, bookAbstract
                     .getImageUrl());
 
             startActivity(intent);
@@ -227,12 +222,12 @@ public class BookAbstractsActivity extends AppCompatActivity
 
     private class ItemAdapter extends BaseAdapter {
 
-        ImageLoader mImageLoader;
-        private LayoutInflater inflater;
+        private ImageLoader mImageLoader;
+        private LayoutInflater mInflator;
 
         public ItemAdapter(Context context) {
 
-            inflater = LayoutInflater.from(context);
+            mInflator = LayoutInflater.from(context);
             RequestQueue queue = Volley.newRequestQueue(context);
             mImageLoader = new ImageLoader(queue, new BitmapCache());
 
@@ -275,7 +270,7 @@ public class BookAbstractsActivity extends AppCompatActivity
 
             if (convertView == null) {
 
-                convertView = inflater.inflate(R.layout
+                convertView = mInflator.inflate(R.layout
                                 .item_book_abstract,
                         null);
 

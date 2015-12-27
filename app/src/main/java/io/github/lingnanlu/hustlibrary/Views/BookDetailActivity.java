@@ -72,9 +72,9 @@ public class BookDetailActivity extends AppCompatActivity {
 
         String bookInfoUrl = getIntent().getStringExtra
                 (BookAbstractsActivity
-                .BOOK_URL);
+                .EXTRA_BOOK_URL);
         String bookCoverUrl = getIntent().getStringExtra
-                (BookAbstractsActivity.BOOK_COVER_URL);
+                (BookAbstractsActivity.EXTRA_BOOK_COVER_URL);
 
         new BookInfoLoadTask().execute(bookInfoUrl, bookCoverUrl);
 

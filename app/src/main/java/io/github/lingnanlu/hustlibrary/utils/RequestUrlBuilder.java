@@ -12,15 +12,6 @@ public class RequestUrlBuilder {
 
     private static final String TAG = "RequestUrlBuilder";
 
-//    public static String build(String path) {
-//
-//        Request request = new Request.Builder().url(PREFIX + path).build();
-//
-//        //Log.d(TAG, request.urlString());
-//
-//        return request;
-//    }
-
     public static String build(String keyWord) {
 
         StringBuilder sb = new StringBuilder();
@@ -38,6 +29,7 @@ public class RequestUrlBuilder {
         return null;
 
     }
+
     public static String build(String keyWord, int begin, int
             totalCount) {
 

@@ -54,6 +54,7 @@ public class HtmlParser {
         return searchResultMetaInfo;
 
     }
+
     public static ArrayList<BookAbstract> parseItems(String html) {
 
         ArrayList<BookAbstract> bookAbstracts = new ArrayList<>();
@@ -98,6 +99,7 @@ public class HtmlParser {
 
         return bookAbstracts;
     }
+
     public static BookDetail parseBook(String html) {
 
         BookDetail bookDetail = new BookDetail();

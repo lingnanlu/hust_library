@@ -8,30 +8,10 @@ import io.github.lingnanlu.hustlibrary.utils.RequestUrlBuilder;
 public class SearchResultMetaInfo {
 
     private String mKeyWord;
-
     private int mBegin;
     private int mEnd;
-
     private int mTotalCount;
 
-
-    private boolean moveToNextPage() {
-
-        if(mEnd == mTotalCount) {
-
-            //说明是最后一页了
-            return false;
-
-        } else {
-
-            mBegin = mEnd + 1;
-            mEnd += Math.min(50, mTotalCount - mEnd);
-            return true;
-
-        }
-
-
-    }
     public String nextPageUrl() {
 
         if(moveToNextPage()) {
@@ -58,7 +38,6 @@ public class SearchResultMetaInfo {
         mTotalCount = totalCount;
     }
 
-
     public int getBegin() {
         return mBegin;
     }
@@ -73,5 +52,23 @@ public class SearchResultMetaInfo {
 
     public void setEnd(int end) {
         mEnd = end;
+    }
+
+    private boolean moveToNextPage() {
+
+        if(mEnd == mTotalCount) {
+
+            //说明是最后一页了
+            return false;
+
+        } else {
+
+            mBegin = mEnd + 1;
+            mEnd += Math.min(50, mTotalCount - mEnd);
+            return true;
+
+        }
+
+
     }
 }

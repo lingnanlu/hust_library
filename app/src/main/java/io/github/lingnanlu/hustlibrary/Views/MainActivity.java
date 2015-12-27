@@ -19,6 +19,8 @@ public class MainActivity
         implements AdapterView.OnItemSelectedListener, View.OnClickListener{
 
     private static final String TAG = "MainActivity";
+    public static final String EXTRA_KEYWORD = "io.github.lingnanlu" +
+            ".hustlibrary.keyword";
 
     @Bind(R.id.searchBox)
     EditText mSearchBox;
@@ -31,9 +33,6 @@ public class MainActivity
 
 //    @Bind(R.id.myToolbar)
 //    Toolbar mToolbar;
-
-    public static final String DATA_KEYWORD = "io.github.lingnanlu" +
-            ".hustlibrary.keyword";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +70,7 @@ public class MainActivity
 
         Intent intent = new Intent(this,BookAbstractsActivity.class);
 
-        intent.putExtra(DATA_KEYWORD, mSearchBox.getText().toString());
+        intent.putExtra(EXTRA_KEYWORD, mSearchBox.getText().toString());
 
         startActivity(intent);
 
