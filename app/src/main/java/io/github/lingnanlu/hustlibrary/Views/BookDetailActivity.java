@@ -204,7 +204,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 return bookDetail;
 
             } catch (IOException e) {
-                Log.d(TAG, "get response error " + e);
+                e.printStackTrace();
             }
 
             return null;

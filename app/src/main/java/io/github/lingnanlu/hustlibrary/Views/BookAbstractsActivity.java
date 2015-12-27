@@ -41,8 +41,10 @@ import io.github.lingnanlu.hustlibrary.utils.BitmapCache;
 import io.github.lingnanlu.hustlibrary.utils.HtmlParser;
 import io.github.lingnanlu.hustlibrary.utils.RequestUrlBuilder;
 
-public class BookAbstractsActivity extends AppCompatActivity implements
-        AbsListView.OnScrollListener, AdapterView.OnItemClickListener{
+public class BookAbstractsActivity extends AppCompatActivity
+        implements
+        AbsListView.OnScrollListener, AdapterView
+        .OnItemClickListener {
 
     private static final String TAG = "BookAbstractsActivity";
 
@@ -92,14 +94,16 @@ public class BookAbstractsActivity extends AppCompatActivity implements
                 Gravity.CENTER));
 
         progressBar.setIndeterminate(true);
-        ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
+        ViewGroup root = (ViewGroup) findViewById(android.R.id
+                .content);
 
         root.addView(progressBar);
 
         mListView.setEmptyView(progressBar);
 
 
-        mKeyWord = getIntent().getStringExtra(MainActivity.DATA_KEYWORD);
+        mKeyWord = getIntent().getStringExtra(MainActivity
+                .DATA_KEYWORD);
 
 
         new ListViewInitTask().execute(mKeyWord);
@@ -129,7 +133,8 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
     @Override
     public void onScroll(AbsListView view, int
-            firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            firstVisibleItem, int visibleItemCount, int
+            totalItemCount) {
 
 
         Log.d(TAG, "onScroll() called with: " +
@@ -144,9 +149,10 @@ public class BookAbstractsActivity extends AppCompatActivity implements
                 "" +
                 mHasLoaded);
 
-        if((firstVisibleItem + visibleItemCount) >= totalItemCount) {
+        if ((firstVisibleItem + visibleItemCount) >= totalItemCount) {
             if ((mPreTask == null && mHasLoaded)
-                    || (mHasLoaded && mPreTask.getStatus() == AsyncTask
+                    || (mHasLoaded && mPreTask.getStatus() ==
+                    AsyncTask
                     .Status.FINISHED)) {
 
                 LoadMoreItemTask task = new LoadMoreItemTask();
@@ -166,20 +172,23 @@ public class BookAbstractsActivity extends AppCompatActivity implements
     private void onInitDataLoaded() {
 
         // mProgressBarLayout.setVisibility(View.GONE);
-        Log.d(TAG, "onInitDataLoaded: mBookItem size " + mBookBookAbstracts.size());
+        Log.d(TAG, "onInitDataLoaded: mBookItem size " +
+                mBookBookAbstracts.size());
         mListView.setAdapter(mItemAdapter);
         mHasLoaded = true;
 
     }
 
-    private void onMoreDataLoaded(ArrayList<BookAbstract> bookAbstracts) {
+    private void onMoreDataLoaded(ArrayList<BookAbstract>
+                                          bookAbstracts) {
 
 
-        if(bookAbstracts != null) {
+        if (bookAbstracts != null) {
 
             Log.d(TAG, "onMoreDataLoaded: Before mBookItem Size " +
                     mBookBookAbstracts.size());
-            Log.d(TAG, "onMoreDataLoaded: bookAbstracts size " + bookAbstracts.size());
+            Log.d(TAG, "onMoreDataLoaded: bookAbstracts size " +
+                    bookAbstracts.size());
             mBookBookAbstracts.addAll(bookAbstracts);
 
             Log.d(TAG, "onMoreDataLoaded: After mBookItem size " +
@@ -198,15 +207,18 @@ public class BookAbstractsActivity extends AppCompatActivity implements
         //不能直接使用adapter的getItem方法
         //注意position和id在有header和footer时不同。
 
-        BookAbstract bookAbstract = (BookAbstract) parent.getItemAtPosition(position);
+        BookAbstract bookAbstract = (BookAbstract) parent
+                .getItemAtPosition(position);
 
 
-        if(bookAbstract != null) {
-            Intent intent = new Intent(this,BookDetailActivity.class);
+        if (bookAbstract != null) {
+            Intent intent = new Intent(this, BookDetailActivity
+                    .class);
 
             String prefix = "http://ftp.lib.hust.edu.cn";
             intent.putExtra(BOOK_URL, prefix + bookAbstract.getUrl());
-            intent.putExtra(BOOK_COVER_URL, bookAbstract.getImageUrl());
+            intent.putExtra(BOOK_COVER_URL, bookAbstract
+                    .getImageUrl());
 
             startActivity(intent);
         }
@@ -228,7 +240,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
         @Override
         public int getCount() {
-            if(mBookBookAbstracts != null) {
+            if (mBookBookAbstracts != null) {
 
                 return mBookBookAbstracts.size();
             }
@@ -240,7 +252,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
         @Override
         public Object getItem(int position) {
 
-            if(mBookBookAbstracts != null) {
+            if (mBookBookAbstracts != null) {
 
                 return mBookBookAbstracts.get(position);
 
@@ -256,7 +268,8 @@ public class BookAbstractsActivity extends AppCompatActivity implements
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView,
+                            ViewGroup parent) {
 
             ViewHolder viewHolder;
 
@@ -268,25 +281,29 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
                 viewHolder = new ViewHolder();
 
-                viewHolder.bookAuthor = (TextView) convertView.findViewById(R
-                        .id.bookAuthor);
-                viewHolder.bookTitle = (TextView) convertView.findViewById(R
-                        .id.bookTitle);
-                viewHolder.bookPress = (TextView) convertView.findViewById(R
-                        .id.bookPress);
+                viewHolder.bookAuthor = (TextView) convertView
+                        .findViewById(R
+                                .id.bookAuthor);
+                viewHolder.bookTitle = (TextView) convertView
+                        .findViewById(R
+                                .id.bookTitle);
+                viewHolder.bookPress = (TextView) convertView
+                        .findViewById(R
+                                .id.bookPress);
                 viewHolder.bookCover = (NetworkImageView) convertView
                         .findViewById(R
-                        .id.bookCover);
+                                .id.bookCover);
 
                 convertView.setTag(viewHolder);
 
             } else {
 
-                viewHolder = (ViewHolder)convertView.getTag();
+                viewHolder = (ViewHolder) convertView.getTag();
 
             }
 
-            BookAbstract bookAbstract = mBookBookAbstracts.get(position);
+            BookAbstract bookAbstract = mBookBookAbstracts.get
+                    (position);
 
             viewHolder.bookAuthor.setText(bookAbstract.getAuthor());
             viewHolder.bookPress.setText(bookAbstract.getPress());
@@ -294,7 +311,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
 
             //有的item没有封面imgeUrl会是/screen/xxxxx
-            if(bookAbstract.getImageUrl().startsWith("http")) {
+            if (bookAbstract.getImageUrl().startsWith("http")) {
 
 //                Picasso.with(BookAbstractsActivity.this)
 //                        .load(bookAbstract.getImageUrl())
@@ -304,7 +321,8 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
                 viewHolder.bookCover.setDefaultImageResId(R.drawable
                         .ic_book_black_36dp);
-                viewHolder.bookCover.setImageUrl(bookAbstract.getImageUrl(),
+                viewHolder.bookCover.setImageUrl(bookAbstract
+                                .getImageUrl(),
                         mImageLoader);
 
             }
@@ -339,7 +357,8 @@ public class BookAbstractsActivity extends AppCompatActivity implements
             String requestUrl = RequestUrlBuilder.build(params[0]);
 
             Log.d(TAG, requestUrl);
-            Request request = new Request.Builder().url(requestUrl).build();
+            Request request = new Request.Builder().url(requestUrl)
+                    .build();
 
             Response response;
             try {
@@ -348,19 +367,17 @@ public class BookAbstractsActivity extends AppCompatActivity implements
                 Log.d(TAG, response.toString());
 
 
+                String content = response.body().string();
+                mSearchResultMetaInfo = HtmlParser.parseMetaInfo
+                        (content);
 
-                    String content = response.body().string();
-                    mSearchResultMetaInfo = HtmlParser.parseMetaInfo(content);
-
-                    // TODO: 2015/12/14
-                    // 解析结果时，暂时还未fill keyWord
-                    mSearchResultMetaInfo.setKeyWord(mKeyWord);
-                    mBookBookAbstracts = HtmlParser.parseItems(content);
-
+                // TODO: 2015/12/14
+                // 解析结果时，暂时还未fill keyWord
+                mSearchResultMetaInfo.setKeyWord(mKeyWord);
+                mBookBookAbstracts = HtmlParser.parseItems(content);
 
             } catch (IOException e) {
-
-                Log.d(TAG, "can't get response " + e);
+                e.printStackTrace();
             }
 
             return null;
@@ -377,11 +394,12 @@ public class BookAbstractsActivity extends AppCompatActivity implements
             ArrayList<BookAbstract>> {
 
         private static final String TAG = "LoadMoreItemTask";
+
         @Override
         protected ArrayList<BookAbstract> doInBackground(String... params) {
 
 
-            if(params[0] != null) {
+            if (params[0] != null) {
 
                 Request request = new Request.Builder().url(params[0])
                         .build();
@@ -397,8 +415,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
                     }
                 } catch (IOException e) {
-
-                    Log.d(TAG, "can't get response " + e);
+                    e.printStackTrace();
                 }
             }
 
@@ -407,7 +424,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(ArrayList<BookAbstract>
-                                                     bookAbstracts) {
+                                             bookAbstracts) {
 
             onMoreDataLoaded(bookAbstracts);
         }
