@@ -63,18 +63,15 @@ public class BookDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_detail);
         ButterKnife.bind(this);
 
-
         setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         mClient = new OkHttpClient();
 
-        String bookInfoUrl = getIntent().getStringExtra
-                (BookAbstractsActivity
-                .EXTRA_BOOK_URL);
-        String bookCoverUrl = getIntent().getStringExtra
-                (BookAbstractsActivity.EXTRA_BOOK_COVER_URL);
+        String bookInfoUrl = getIntent().getStringExtra(BookAbstractsActivity.EXTRA_BOOK_URL);
+        String bookCoverUrl = getIntent().getStringExtra(
+                BookAbstractsActivity.EXTRA_BOOK_COVER_URL);
 
         new BookInfoLoadTask().execute(bookInfoUrl, bookCoverUrl);
 
@@ -97,8 +94,10 @@ public class BookDetailActivity extends AppCompatActivity {
         /*
         findViewById() only works to find subviews of the object View. It will not work on a layout id.
          */
-        View header = getLayoutInflater().inflate(R.layout
-                .item_header_book_store_info_list, mBookStoreInfos, false);
+        View header = getLayoutInflater().inflate(
+                R.layout.item_header_book_store_info_list,
+                mBookStoreInfos,
+                false);
         mBookStoreInfos.addHeaderView(header, null, false);
         mBookStoreInfos.setAdapter(adapter);
 
@@ -144,8 +143,7 @@ public class BookDetailActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            View container = inflater.inflate(R.layout
-                            .item_book_store_info, null);
+            View container = inflater.inflate(R.layout.item_book_store_info, null);
 
             TextView location = (TextView) container.findViewById(R.id.location);
             TextView state = (TextView) container.findViewById(R.id.state);
@@ -154,15 +152,13 @@ public class BookDetailActivity extends AppCompatActivity {
             state.setText(mBookStoreInfos.get(position)[2]);
 
             if (position % 2 == 0) {
-                container.setBackgroundColor(getResources()
-                        .getColor(R.color.grey_300));
+                container.setBackgroundColor(getResources().getColor(R.color.grey_300));
             }
             return container;
         }
 
     }
-    private class BookInfoLoadTask extends
-    AsyncTask<String, Void, BookDetail>{
+    private class BookInfoLoadTask extends AsyncTask<String, Void, BookDetail>{
 
         @Override
         protected BookDetail doInBackground(String... params) {
@@ -172,10 +168,8 @@ public class BookDetailActivity extends AppCompatActivity {
 
             Request.Builder builder = new Request.Builder();
 
-            Request bookInfoRequest = builder.url(bookInfoUrl)
-                    .build();
-            Request bookCoverRequest = builder.url(bookCoverUrl)
-                    .build();
+            Request bookInfoRequest = builder.url(bookInfoUrl).build();
+            Request bookCoverRequest = builder.url(bookCoverUrl).build();
 
             Response response = null;
             BookDetail bookDetail = null;

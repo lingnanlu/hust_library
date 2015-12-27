@@ -39,13 +39,9 @@ public class HtmlParser {
 
 //        searchResultMetaInfo.setKeyWord(content.substring(0, leftBracketIndex));
 
-        int begin = Integer.parseInt(content.substring
-                (leftBracketIndex + 1,
-                minusIndex));
-        int end = Integer.parseInt(content.substring(minusIndex + 1,
-                gongIndex - 1));
-        int totalCount = Integer.parseInt(content.substring(gongIndex +
-                2, rightBracketIndex));
+        int begin = Integer.parseInt(content.substring(leftBracketIndex + 1, minusIndex));
+        int end = Integer.parseInt(content.substring(minusIndex + 1, gongIndex - 1));
+        int totalCount = Integer.parseInt(content.substring(gongIndex + 2, rightBracketIndex));
 
         searchResultMetaInfo.setBegin(begin);
         searchResultMetaInfo.setEnd(end);
@@ -69,8 +65,7 @@ public class HtmlParser {
             Log.d(TAG, "" + count );
             BookAbstract bookAbstract = new BookAbstract();
             bookAbstract.setImageUrl(
-                    book.select("td.briefcitExtras img").last().attr
-                            ("src"));
+                    book.select("td.briefcitExtras img").last().attr("src"));
 
             Element briefcitDetail = book.select("td.briefcitDetail").first();
 
@@ -138,6 +133,7 @@ public class HtmlParser {
 
                 //remove "&nbsp"
                 strs[i] = tds.get(i).text().replace("\u00a0","");
+
             }
             storeEntrys.add(strs);
         }

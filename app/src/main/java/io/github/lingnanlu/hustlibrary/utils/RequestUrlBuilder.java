@@ -9,7 +9,6 @@ import java.net.URLEncoder;
 public class RequestUrlBuilder {
 
     public static final String PREFIX = "http://ftp.lib.hust.edu.cn/search*chx?/X";
-
     private static final String TAG = "RequestUrlBuilder";
 
     public static String build(String keyWord) {

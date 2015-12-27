@@ -14,13 +14,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.github.lingnanlu.hustlibrary.R;
 
-public class MainActivity
-        extends AppCompatActivity
-        implements AdapterView.OnItemSelectedListener, View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements
+        AdapterView.OnItemSelectedListener,
+        View.OnClickListener{
 
     private static final String TAG = "MainActivity";
-    public static final String EXTRA_KEYWORD = "io.github.lingnanlu" +
-            ".hustlibrary.keyword";
+    public static final String EXTRA_KEYWORD = "io.github.lingnanlu.hustlibrary.keyword";
 
     @Bind(R.id.searchBox)
     EditText mSearchBox;
@@ -42,11 +41,12 @@ public class MainActivity
 
 //        setSupportActionBar(mToolbar);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter
-                .createFromResource(this, R.array.category, android
-                        .R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout
-                .simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.category,
+                android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mCatagorySelector.setAdapter(adapter);
         mCatagorySelector.setOnItemSelectedListener(this);
 
@@ -55,8 +55,7 @@ public class MainActivity
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int position, long id) {
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
     }
 
