@@ -37,7 +37,6 @@ public class HtmlParser {
         int gongIndex = content.indexOf('共');
         int rightBracketIndex = content.length() - 1;
 
-//        searchResultMetaInfo.setKeyWord(content.substring(0, leftBracketIndex));
 
         int begin = Integer.parseInt(content.substring(leftBracketIndex + 1, minusIndex));
         int end = Integer.parseInt(content.substring(minusIndex + 1, gongIndex - 1));
@@ -62,7 +61,7 @@ public class HtmlParser {
         int count = 0;
         for(Element book : books) {
 
-            Log.d(TAG, "" + count );
+            Log.d(TAG, "" + count);
             BookAbstract bookAbstract = new BookAbstract();
             bookAbstract.setImageUrl(
                     book.select("td.briefcitExtras img").last().attr("src"));
@@ -72,8 +71,10 @@ public class HtmlParser {
             bookAbstract.setUrl(briefcitDetail.select("a").first().attr("href"));
             bookAbstract.setBookTitle(briefcitDetail.select("a").first().text());
 
-            // 因为Html文件中，这部分内容是三个嵌套的span，所以需要对所需要的内容进行计算
-            // 从这里也可以看到多层次结构的弊端
+            /*
+             * 因为Html文件中，这部分内容是三个嵌套的span，所以需要对所需要的内容进行计算
+             * 从这里也可以看到多层次结构的弊端
+             */
             Element level1 = briefcitDetail.select("> .briefcitDetail").first();
             Element level2 = level1.select("> .briefcitDetail").first();
             Element level3 = level2.select("> .briefcitDetail").first();
@@ -89,7 +90,6 @@ public class HtmlParser {
             bookAbstracts.add(bookAbstract);
         }
 
-//        Log.d(TAG, books.toString());
 
 
         return bookAbstracts;
@@ -101,7 +101,7 @@ public class HtmlParser {
 
         Document document = Jsoup.parse(html);
         /*
-        获得书籍基本信息
+         * 获得书籍基本信息
          */
         Element bibInfoEntry = document.select(".bibInfoEntry").first();
         Element tbody = bibInfoEntry.select("tbody").first();
@@ -117,7 +117,7 @@ public class HtmlParser {
         bookDetail.setISBN(entrys.get(5).split(" ")[0]);
 
         /*
-        获得馆藏信息
+         * 获得馆藏信息
          */
         Element bibItems = document.select(".bibItems").first();
 

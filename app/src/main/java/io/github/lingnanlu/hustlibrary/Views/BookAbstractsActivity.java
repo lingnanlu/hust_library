@@ -147,9 +147,9 @@ public class BookAbstractsActivity extends AppCompatActivity implements
     }
 
     /*
-    以下两个方法将AsyncTask中代码移动到Activity下，这样更能体现Activity的Controller角色
-    当某某事件发生时，Controller需要执行的动作就写成onXXX方法
-    这也是为什么要使用Activity来实现OnScrollListenser的原因
+     *  以下两个方法将AsyncTask中代码移动到Activity下，这样更能体现Activity的Controller角色当某某事件发生时，
+     *  Controller需要执行的动作就写成onXXX方法
+     *  这也是为什么要使用Activity来实现OnScrollListenser的原因
      */
     private void onInitDataLoaded() {
 
@@ -179,10 +179,11 @@ public class BookAbstractsActivity extends AppCompatActivity implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        //使用该方法，会自动处理有header和footer的情况
-        //不能直接使用adapter的getItem方法
-        //注意position和id在有header和footer时不同。
-
+        /*
+         * 使用该方法，会自动处理有header和footer的情况
+         * 不能直接使用adapter的getItem方法
+         * 注意position和id在有header和footer时不同。
+         */
         BookAbstract bookAbstract = (BookAbstract) parent.getItemAtPosition(position);
 
 
@@ -274,11 +275,11 @@ public class BookAbstractsActivity extends AppCompatActivity implements
             //有的item没有封面imgeUrl会是/screen/xxxxx
             if (bookAbstract.getImageUrl().startsWith("http")) {
 
-//                Picasso.with(BookAbstractsActivity.this)
-//                        .load(bookAbstract.getImageUrl())
-//                        .placeholder(R.drawable.ic_book_black_36dp)
-//                        .error(R.drawable.ic_book_black_36dp)
-//                        .into(viewHolder.bookCover);
+         /*       Picasso.with(BookAbstractsActivity.this)
+                        .load(bookAbstract.getImageUrl())
+                        .placeholder(R.drawable.ic_book_black_36dp)
+                        .error(R.drawable.ic_book_black_36dp)
+                        .into(viewHolder.bookCover);*/
 
                 viewHolder.bookCover.setDefaultImageResId(R.drawable.ic_book_black_36dp);
                 viewHolder.bookCover.setImageUrl(bookAbstract.getImageUrl(), mImageLoader);

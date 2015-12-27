@@ -92,7 +92,8 @@ public class BookDetailActivity extends AppCompatActivity {
         BookStoreInfoAdapter adapter = new BookStoreInfoAdapter(bookDetail);
 
         /*
-        findViewById() only works to find subviews of the object View. It will not work on a layout id.
+         * findViewById() only works to find subviews of the object View.
+         * It will not work on a layout id.
          */
         View header = getLayoutInflater().inflate(
                 R.layout.item_header_book_store_info_list,
