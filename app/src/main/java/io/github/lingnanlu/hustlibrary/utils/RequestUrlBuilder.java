@@ -8,13 +8,13 @@ import java.net.URLEncoder;
  */
 public class RequestUrlBuilder {
 
-    public static final String prefix = "http://ftp.lib.hust.edu.cn/search*chx?/X";
+    public static final String PREFIX = "http://ftp.lib.hust.edu.cn/search*chx?/X";
 
     private static final String TAG = "RequestUrlBuilder";
 
 //    public static String build(String path) {
 //
-//        Request request = new Request.Builder().url(prefix + path).build();
+//        Request request = new Request.Builder().url(PREFIX + path).build();
 //
 //        //Log.d(TAG, request.urlString());
 //
@@ -43,7 +43,7 @@ public class RequestUrlBuilder {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append(prefix);
+        sb.append(PREFIX);
 
         StringBuilder codePoints = new StringBuilder();
         int length = keyWord.length();
