@@ -73,7 +73,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_item_list);
+        setContentView(R.layout.activity_book_abstracts);
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
@@ -263,7 +263,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
             if (convertView == null) {
 
                 convertView = inflater.inflate(R.layout
-                                .list_item,
+                                .item_book_abstract,
                         null);
 
                 viewHolder = new ViewHolder();

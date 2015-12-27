@@ -98,7 +98,7 @@ public class BookDetailActivity extends AppCompatActivity {
         findViewById() only works to find subviews of the object View. It will not work on a layout id.
          */
         View header = getLayoutInflater().inflate(R.layout
-                .list_book_store_info_header, mBookStoreInfos, false);
+                .item_header_book_store_info_list, mBookStoreInfos, false);
         mBookStoreInfos.addHeaderView(header, null, false);
         mBookStoreInfos.setAdapter(adapter);
 
@@ -145,7 +145,7 @@ public class BookDetailActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             View container = inflater.inflate(R.layout
-                            .list_book_store_info, null);
+                            .item_book_store_info, null);
 
             TextView location = (TextView) container.findViewById(R.id.location);
             TextView state = (TextView) container.findViewById(R.id.state);
