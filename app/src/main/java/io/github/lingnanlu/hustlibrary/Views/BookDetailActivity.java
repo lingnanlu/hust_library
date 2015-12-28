@@ -96,7 +96,7 @@ public class BookDetailActivity extends AppCompatActivity {
          * It will not work on a layout id.
          */
         View header = getLayoutInflater().inflate(
-                R.layout.item_header_book_store_info_list,
+                R.layout.header_book_store_info_list,
                 mBookStoreInfos,
                 false);
         mBookStoreInfos.addHeaderView(header, null, false);

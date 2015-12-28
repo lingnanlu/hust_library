@@ -16,6 +16,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -57,12 +58,16 @@ public class BookAbstractsActivity extends AppCompatActivity implements
     private ItemAdapter mItemAdapter;
     private String mKeyWord;
     private LoadMoreItemTask mPreTask;
-
+    private int mListScrollState = SCROLL_STATE_IDLE;
     @Bind(R.id.list_book_abstracts)
     ListView mListView;
 
     @Bind(R.id.toolbar_custom)
     Toolbar mToolbar;
+
+    LinearLayout mFooter;
+    ProgressBar mLoadingMoreProgreeBar;
+    TextView mNoMoreData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +82,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mItemAdapter = new ItemAdapter(this);
-        mListView.setOnScrollListener(this);
+
         mListView.setOnItemClickListener(this);
 
         ProgressBar progressBar = new ProgressBar(this);
@@ -91,6 +96,12 @@ public class BookAbstractsActivity extends AppCompatActivity implements
         ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
         root.addView(progressBar);
         mListView.setEmptyView(progressBar);
+
+        mFooter = (LinearLayout)LayoutInflater.from(this).
+                inflate(R.layout.footer_book_abstract_list,null, false);
+        mLoadingMoreProgreeBar = (ProgressBar)mFooter.findViewById(R.id.progressbar_loading_more);
+        mNoMoreData = (TextView)mFooter.findViewById(R.id.text_no_more_data);
+        mListView.addFooterView(mFooter);
 
         mKeyWord = getIntent().getStringExtra(MainActivity.EXTRA_KEYWORD);
 
@@ -117,30 +128,54 @@ public class BookAbstractsActivity extends AppCompatActivity implements
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
+        mListScrollState = scrollState;
     }
 
+    /*
+     * 官方文档上说,"This will be called after the scroll has completed",即scroll has completed后,
+     * 会调用该方法,但没有有说只有在这种情况下才调用该方法,the scroll has completed并不是调用onScroll的充分必要条件
+     * 而且log显示在没有scroll之前该方法会调用多次.
+     *
+     * 另一个值得注意的地方的totalItemCount参数,官方中说明
+     *
+     * totalItemCount: the number of items in the list adaptor
+     *
+     * 即当设置了list adapter后,totalItemCount才有意义,而setOnScrollListener会调用onScroll,如果在调用setAdapter
+     * 之前调用setOnScrollListener,则totalItemCount为0.
+     */
     @Override
     public void onScroll(AbsListView view,
                          int firstVisibleItem,
                          int visibleItemCount,
                          int totalItemCount) {
 
-
         //所有的控制逻辑放在Activity中，不要放到AsyncTask中，保持AsyncTask任务的单一性
 
-        Log.d(TAG, "onScroll() mPreTask " + mPreTask
-                + " mHasLoaded " + mHasLoaded);
+        Log.d(TAG, "onScroll() "
+                + " firstVisibleItem " + firstVisibleItem
+                + " visibleItemCount " + visibleItemCount
+                + " totalItemCount " + totalItemCount
+                + " mListScrollState " + mListScrollState
+                );
 
-        if ((firstVisibleItem + visibleItemCount) >= totalItemCount) {
+        boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+        if(loadMore) {
             if ((mPreTask == null && mHasLoaded)
                     || (mHasLoaded && mPreTask.getStatus() == AsyncTask.Status.FINISHED)) {
 
-                LoadMoreItemTask task = new LoadMoreItemTask();
-                mPreTask = task;
-                task.execute(mSearchResultMetaInfo.nextPageUrl());
-
+                String nextPageUrl = mSearchResultMetaInfo.nextPageUrl();
+                if (nextPageUrl != null) {
+                    mLoadingMoreProgreeBar.setVisibility(View.VISIBLE);
+                    LoadMoreItemTask task = new LoadMoreItemTask();
+                    mPreTask = task;
+                    task.execute(nextPageUrl);
+                } else {
+                    mLoadingMoreProgreeBar.setVisibility(View.GONE);
+                    mNoMoreData.setVisibility(View.VISIBLE);
+                }
             }
         }
+
 
     }
 
@@ -153,6 +188,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
         Log.d(TAG, "onInitDataLoaded: mBookItem size " + mBookAbstracts.size());
         mListView.setAdapter(mItemAdapter);
+        mListView.setOnScrollListener(this);
         mHasLoaded = true;
 
     }
