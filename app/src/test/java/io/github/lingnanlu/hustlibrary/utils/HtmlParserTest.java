@@ -9,8 +9,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import io.github.lingnanlu.hustlibrary.model.BookDetail;
-import io.github.lingnanlu.hustlibrary.model.SearchResultMetaInfo;
+import io.github.lingnanlu.hustlibrary.SearchResultMetaInfo;
 
 import static org.junit.Assert.assertEquals;
 

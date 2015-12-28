@@ -1,4 +1,4 @@
-package io.github.lingnanlu.hustlibrary.model;
+package io.github.lingnanlu.hustlibrary;
 
 import io.github.lingnanlu.hustlibrary.utils.RequestUrlBuilder;
 

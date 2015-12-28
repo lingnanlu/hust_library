@@ -9,9 +9,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
-import io.github.lingnanlu.hustlibrary.model.BookDetail;
-import io.github.lingnanlu.hustlibrary.model.BookAbstract;
-import io.github.lingnanlu.hustlibrary.model.SearchResultMetaInfo;
+import io.github.lingnanlu.hustlibrary.SearchResultMetaInfo;
 
 /**
  * Created by Administrator on 2015/12/9.

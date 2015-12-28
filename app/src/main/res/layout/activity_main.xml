@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="io.github.lingnanlu.hustlibrary.Views.MainActivity">
+    tools:context=".MainActivity">
 
     <ImageView
         android:id="@+id/image_logo"

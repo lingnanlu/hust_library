@@ -1,4 +1,4 @@
-package io.github.lingnanlu.hustlibrary.Views;
+package io.github.lingnanlu.hustlibrary;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,8 +26,6 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.github.lingnanlu.hustlibrary.R;
-import io.github.lingnanlu.hustlibrary.model.BookDetail;
 import io.github.lingnanlu.hustlibrary.utils.HtmlParser;
 
 public class BookDetailActivity extends AppCompatActivity {

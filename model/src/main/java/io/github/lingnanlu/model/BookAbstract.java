@@ -1,7 +1,7 @@
-package io.github.lingnanlu.hustlibrary.model;
+package io.github.lingnanlu.model;
 
 /**
- * Created by Administrator on 2015/12/9.
+ * Created by Administrator on 2015/12/28.
  */
 public class BookAbstract {
 

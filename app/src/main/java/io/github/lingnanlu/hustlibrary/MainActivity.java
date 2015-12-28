@@ -1,4 +1,4 @@
-package io.github.lingnanlu.hustlibrary.Views;
+package io.github.lingnanlu.hustlibrary;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,6 @@ import android.widget.Spinner;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.github.lingnanlu.hustlibrary.R;
 
 public class MainActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener,
@@ -30,16 +29,12 @@ public class MainActivity extends AppCompatActivity implements
     @Bind(R.id.spinner_searchBy)
     Spinner mCatagorySelector;
 
-//    @Bind(R.id.myToolbar)
-//    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-//        setSupportActionBar(mToolbar);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
