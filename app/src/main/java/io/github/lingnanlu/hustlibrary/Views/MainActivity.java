@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
 
-        Intent intent = new Intent(this,BookAbstractsActivity.class);
+        Intent intent = new Intent(this,BookListActivity.class);
         intent.putExtra(EXTRA_KEYWORD, mSearchBox.getText().toString());
         startActivity(intent);
 

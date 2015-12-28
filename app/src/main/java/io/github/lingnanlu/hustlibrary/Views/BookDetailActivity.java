@@ -69,9 +69,9 @@ public class BookDetailActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         mClient = new OkHttpClient();
 
-        String bookInfoUrl = getIntent().getStringExtra(BookAbstractsActivity.EXTRA_BOOK_URL);
+        String bookInfoUrl = getIntent().getStringExtra(BookListActivity.EXTRA_BOOK_URL);
         String bookCoverUrl = getIntent().getStringExtra(
-                BookAbstractsActivity.EXTRA_BOOK_COVER_URL);
+                BookListActivity.EXTRA_BOOK_COVER_URL);
 
         new BookInfoLoadTask().execute(bookInfoUrl, bookCoverUrl);
 

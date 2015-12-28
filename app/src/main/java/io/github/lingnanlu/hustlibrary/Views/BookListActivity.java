@@ -42,11 +42,11 @@ import io.github.lingnanlu.hustlibrary.utils.BitmapCache;
 import io.github.lingnanlu.hustlibrary.utils.HtmlParser;
 import io.github.lingnanlu.hustlibrary.utils.RequestUrlBuilder;
 
-public class BookAbstractsActivity extends AppCompatActivity implements
+public class BookListActivity extends AppCompatActivity implements
         AbsListView.OnScrollListener,
         AdapterView.OnItemClickListener {
 
-    private static final String TAG = "BookAbstractsActivity";
+    private static final String TAG = "BookListActivity";
     public static final String EXTRA_BOOK_URL = "io.github.lingnanlu.hustlibrary.book_url";
     public static final String EXTRA_BOOK_COVER_URL =
             "io.github.lingnanlu.hustlibrary.book_cover_url";
@@ -59,7 +59,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
     private String mKeyWord;
     private LoadMoreItemTask mPreTask;
     private int mListScrollState = SCROLL_STATE_IDLE;
-    @Bind(R.id.list_book_abstracts)
+    @Bind(R.id.list_book_list)
     ListView mListView;
 
     @Bind(R.id.toolbar_custom)
@@ -73,7 +73,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_abstracts);
+        setContentView(R.layout.activity_book_list);
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
@@ -308,7 +308,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
             //有的item没有封面imgeUrl会是/screen/xxxxx
             if (bookAbstract.getImageUrl().startsWith("http")) {
 
-         /*       Picasso.with(BookAbstractsActivity.this)
+         /*       Picasso.with(BookListActivity.this)
                         .load(bookAbstract.getImageUrl())
                         .placeholder(R.drawable.ic_book_black_36dp)
                         .error(R.drawable.ic_book_black_36dp)
