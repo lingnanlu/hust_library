@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import io.github.lingnanlu.model.Book;
 import io.github.lingnanlu.model.BookAbstract;
+import io.github.lingnanlu.model.SearchResultMetaInfo;
 
 /**
  * Created by Administrator on 2015/12/28.
@@ -19,7 +20,7 @@ public class Parser {
 
     private static final String TAG = "Parser";
 
-   /* public static SearchResultMetaInfo parseMetaInfo(String html) {
+    public static SearchResultMetaInfo parseMetaInfo(String html) {
 
         Document document = Jsoup.parse(html);
 
@@ -44,7 +45,7 @@ public class Parser {
 
         return searchResultMetaInfo;
 
-    }*/
+    }
 
     public static ArrayList<BookAbstract> parseBookAbstracts(String html) {
 

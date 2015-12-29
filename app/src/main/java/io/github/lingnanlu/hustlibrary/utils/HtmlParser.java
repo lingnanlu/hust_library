@@ -9,7 +9,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
-import io.github.lingnanlu.hustlibrary.SearchResultMetaInfo;
+import io.github.lingnanlu.model.SearchResultMetaInfo;
 
 /**
  * Created by Administrator on 2015/12/9.

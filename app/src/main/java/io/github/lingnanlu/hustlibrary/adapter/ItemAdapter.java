@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import io.github.lingnanlu.hustlibrary.R;
 import io.github.lingnanlu.hustlibrary.utils.BitmapCache;
+import io.github.lingnanlu.model.BookAbstract;
 
 /**
  * Created by Administrator on 2015/12/28.
@@ -24,9 +25,9 @@ public class ItemAdapter extends BaseAdapter {
 
     private ImageLoader mImageLoader;
     private LayoutInflater mInflator;
-    private ArrayList<io.github.lingnanlu.model.BookAbstract> mBookAbstracts;
+    private ArrayList<BookAbstract> mBookAbstracts;
 
-    public ItemAdapter(Context context, ArrayList<io.github.lingnanlu.model.BookAbstract>
+    public ItemAdapter(Context context, ArrayList<BookAbstract>
             bookAbstracts) {
 
         mInflator = LayoutInflater.from(context);
@@ -110,6 +111,10 @@ public class ItemAdapter extends BaseAdapter {
         }
 
         return convertView;
+    }
+
+    public void addData(ArrayList<BookAbstract> data) {
+        mBookAbstracts.addAll(data);
     }
 
 

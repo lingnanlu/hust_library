@@ -1,7 +1,6 @@
 package io.github.lingnanlu.hustlibrary;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.debug.hv.ViewServer;
-import com.squareup.okhttp.OkHttpClient;
 
 import java.util.ArrayList;
 
@@ -41,13 +39,12 @@ public class BookAbstractsActivity extends AppCompatActivity implements
     public static final String EXTRA_BOOK_COVER_URL =
             "io.github.lingnanlu.hustlibrary.book_cover_url";
 
-    private boolean mHasLoaded = false;
     private ItemAdapter mItemAdapter;
     private String mKeyWord;
-    private int mListScrollState = SCROLL_STATE_IDLE;
     private AppAction mAppAction;
     private Boolean mIsLoadingMore = false;
-    private int mCurrentPage = 1;
+    private int mNextPage = 1;
+
     @Bind(R.id.list_book_abstracts)
     ListView mListView;
 
@@ -65,14 +62,38 @@ public class BookAbstractsActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_book_abstracts);
         ButterKnife.bind(this);
 
-        setSupportActionBar(mToolbar);
+        //init toolbar
+        initToolbar();
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        initList();
 
+        mKeyWord = getIntent().getStringExtra(MainActivity.EXTRA_KEYWORD);
 
-        mListView.setOnItemClickListener(this);
+        mAppAction = AppActionImpl.getInstance();
 
+        mAppAction.loadBooks(mKeyWord, mNextPage, new CallBackListener<ArrayList<BookAbstract>>() {
+
+            @Override
+            public void onSuccess(ArrayList<BookAbstract> data) {
+
+                mItemAdapter = new ItemAdapter(BookAbstractsActivity.this, data);
+                mListView.setAdapter(mItemAdapter);
+                mListView.setOnScrollListener(BookAbstractsActivity.this);
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+
+        ViewServer.get(this).addWindow(this);
+    }
+
+    private void initList() {
+
+        //set empty view
         ProgressBar progressBar = new ProgressBar(this);
         progressBar.setLayoutParams(
                 new FrameLayout.LayoutParams(
@@ -85,36 +106,24 @@ public class BookAbstractsActivity extends AppCompatActivity implements
         root.addView(progressBar);
         mListView.setEmptyView(progressBar);
 
-        mFooter = (LinearLayout)LayoutInflater.from(this).
+        //set footer
+        mFooter = (LinearLayout) LayoutInflater.from(this).
                 inflate(R.layout.footer_book_abstract_list,null, false);
         mLoadingMoreProgreeBar = (ProgressBar)mFooter.findViewById(R.id.progressbar_loading_more);
         mNoMoreData = (TextView)mFooter.findViewById(R.id.text_no_more_data);
         mListView.addFooterView(mFooter);
 
-        mKeyWord = getIntent().getStringExtra(MainActivity.EXTRA_KEYWORD);
+        //registe listener
+        mListView.setOnItemClickListener(this);
 
-        mAppAction = AppActionImpl.getInstance();
+    }
 
-        mAppAction.loadBooks(mKeyWord, mCurrentPage, new CallBackListener<ArrayList<BookAbstract>>() {
+    private void initToolbar() {
 
+        setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
-            @Override
-            public void onSuccess(ArrayList<BookAbstract> data) {
-
-                mItemAdapter = new ItemAdapter(BookAbstractsActivity.this, data);
-                mListView.setAdapter(mItemAdapter);
-                mListView.setOnScrollListener(BookAbstractsActivity.this);
-                mHasLoaded = true;
-
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
-
-        ViewServer.get(this).addWindow(this);
     }
 
     @Override
@@ -160,22 +169,37 @@ public class BookAbstractsActivity extends AppCompatActivity implements
                 + " firstVisibleItem " + firstVisibleItem
                 + " visibleItemCount " + visibleItemCount
                 + " totalItemCount " + totalItemCount
-                + " mListScrollState " + mListScrollState
                 );
 
         boolean reachEnd = firstVisibleItem + visibleItemCount >= totalItemCount;
         if(reachEnd && !mIsLoadingMore) {
 
-                mCurrentPage++;
-                if (nextPageUrl != null) {
-                    mLoadingMoreProgreeBar.setVisibility(View.VISIBLE);
-                    LoadMoreItemTask task = new LoadMoreItemTask();
-                    mPreTask = task;
-                    task.execute(nextPageUrl);
-                } else {
-                    mLoadingMoreProgreeBar.setVisibility(View.GONE);
+            mNextPage++;
+            mIsLoadingMore = true;
+            mLoadingMoreProgreeBar.setVisibility(View.VISIBLE);
+            mAppAction.loadBooks(mKeyWord, mNextPage, new CallBackListener<ArrayList<BookAbstract>>() {
+
+                @Override
+                public void onSuccess(ArrayList<BookAbstract> data) {
+                    mItemAdapter.addData(data);
+                    mItemAdapter.notifyDataSetChanged();
+                    mIsLoadingMore = false;
+                }
+
+                @Override
+                public void onError() {
                     mNoMoreData.setVisibility(View.VISIBLE);
                 }
+            });
+//                if (nextPageUrl != null) {
+//
+//                    LoadMoreItemTask task = new LoadMoreItemTask();
+//                    mPreTask = task;
+//                    task.execute(nextPageUrl);
+//                } else {
+//                    mLoadingMoreProgreeBar.setVisibility(View.GONE);
+//                    mNoMoreData.setVisibility(View.VISIBLE);
+//                }
 
         }
 
@@ -188,20 +212,20 @@ public class BookAbstractsActivity extends AppCompatActivity implements
      *  这也是为什么要使用Activity来实现OnScrollListenser的原因
      */
 
-    private void onMoreDataLoaded(ArrayList<BookAbstract> bookAbstracts) {
-
-        if (bookAbstracts != null) {
-
-            Log.d(TAG, "onMoreDataLoaded: Before mBookItem Size " + mBookAbstracts.size());
-            Log.d(TAG, "onMoreDataLoaded: bookAbstracts size " + bookAbstracts.size());
-            mBookAbstracts.addAll(bookAbstracts);
-
-            Log.d(TAG, "onMoreDataLoaded: After mBookItem size " + mBookAbstracts.size());
-            mItemAdapter.notifyDataSetChanged();
-        }
-
-
-    }
+//    private void onMoreDataLoaded(ArrayList<BookAbstract> bookAbstracts) {
+//
+//        if (bookAbstracts != null) {
+//
+//            Log.d(TAG, "onMoreDataLoaded: Before mBookItem Size " + mBookAbstracts.size());
+//            Log.d(TAG, "onMoreDataLoaded: bookAbstracts size " + bookAbstracts.size());
+//            mBookAbstracts.addAll(bookAbstracts);
+//
+//            Log.d(TAG, "onMoreDataLoaded: After mBookItem size " + mBookAbstracts.size());
+//            mItemAdapter.notifyDataSetChanged();
+//        }
+//
+//
+//    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -212,7 +236,6 @@ public class BookAbstractsActivity extends AppCompatActivity implements
          * 注意position和id在有header和footer时不同。
          */
         BookAbstract bookAbstract = (BookAbstract) parent.getItemAtPosition(position);
-
 
         if (bookAbstract != null) {
             Intent intent = new Intent(this, BookDetailActivity.class);
@@ -225,8 +248,6 @@ public class BookAbstractsActivity extends AppCompatActivity implements
         }
 
     }
-
-
 
 
 
