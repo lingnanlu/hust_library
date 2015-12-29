@@ -16,15 +16,33 @@ import io.github.lingnanlu.model.SearchResultMetaInfo;
 /**
  * Created by Administrator on 2015/12/28.
  *
+ * 该Api并不是无状态,你无法直接调用bookDetail来获得一本书的信息,这是由于图书馆网站的请求url中包含着totalCount和页数
+ * 信息所导致的.所以在请求一本书之前必须获得totalCount和该书所在结果页数.
+ *
+ * 如果设计成无状态的,则在调用bookDetail必须通过bookAbstractList得到totalCount和page信息,这样会做大量无用请求.
+ * 消耗流量.
+ *
+ * 在这里设计成有状态的.在调用bookDetail前,一定会调用bookAbstractList, 因为应用的操作逻辑是先搜索得到结果列表,
+ * 再点某一条目来得到书的详细信息.
+ *
+ * 针对所有可能的操作情况,写了相应的测试用例
+ *
+ * 1. 同一关键字,不同页数
+ * 2. 不同关键字
+ * 3. 同一关键字,不同页数下选取一本书查看其详细信息.
+ *
+ * 以上可知,由于图书馆网站没有api,暂时只能设计成这样.
+ *
  *  */
 public class ApiImpl implements Api {
 
     private static Parser mParser = new Parser();
     private static UrlBuilder mUrlBuilder = new UrlBuilder();
     private static OkHttpClient mHttpClient = new OkHttpClient();
+    public static final String PREFIX = "http://ftp.lib.hust.edu.cn";
 
     private ArrayList<BookAbstract> mBookAbstracts;
-    private MetaInfo mMetaInfo;
+    private MetaInfo mMetaInfo = new MetaInfo();
 
     @Override
     public ArrayList<BookAbstract> bookAbstractList(String keyword, int page) {
@@ -49,7 +67,7 @@ public class ApiImpl implements Api {
 
             Response response = mHttpClient.newCall(builder.url(url).build()).execute();
             ArrayList<BookAbstract> result = mParser.parseBookAbstracts(response.body().string());
-            mBookAbstracts = (ArrayList<BookAbstract>) result.clone();
+            mBookAbstracts = result;
             return result;
 
         } catch (IOException e) {
@@ -80,10 +98,20 @@ public class ApiImpl implements Api {
     @Override
     public Book bookDetail(String bookTitle) {
 
+        if(BuildConfig.DEBUG) {
+            System.out.println(bookTitle + "\n");
+        }
         String bookDetailUrl = null;
         for(BookAbstract bookAbstract : mBookAbstracts) {
-            if (bookAbstract.getBookTitle() == bookTitle) {
-                bookDetailUrl = bookAbstract.getUrl();
+
+            if(BuildConfig.DEBUG) {
+                System.out.println(bookAbstract.getBookTitle());
+
+            }
+
+            if (bookAbstract.getBookTitle().equals(bookTitle)) {
+                bookDetailUrl = PREFIX + bookAbstract.getUrl();
+                break;
             }
         }
 
@@ -100,9 +128,11 @@ public class ApiImpl implements Api {
 
     }
 
+    // TODO: 2015/12/29 暂时方法,测试的时候使用
     public MetaInfo getMetaInfo() {
         return mMetaInfo;
     }
+
     public static class MetaInfo {
         String keyword;
         int totalCount;

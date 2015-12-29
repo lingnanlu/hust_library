@@ -21,18 +21,19 @@ import io.github.lingnanlu.model.BookAbstract;
 /**
  * Created by Administrator on 2015/12/28.
  */
-public class ItemAdapter extends BaseAdapter {
+public class BookListAdapter extends BaseAdapter {
 
     private ImageLoader mImageLoader;
     private LayoutInflater mInflator;
     private ArrayList<BookAbstract> mBookAbstracts;
 
-    public ItemAdapter(Context context, ArrayList<BookAbstract>
+    public BookListAdapter(Context context, ArrayList<BookAbstract>
             bookAbstracts) {
 
         mInflator = LayoutInflater.from(context);
         RequestQueue queue = Volley.newRequestQueue(context);
         mImageLoader = new ImageLoader(queue, new BitmapCache());
+        mBookAbstracts = bookAbstracts;
 
     }
 
@@ -41,6 +42,7 @@ public class ItemAdapter extends BaseAdapter {
         if (mBookAbstracts != null) {
 
             return mBookAbstracts.size();
+
         }
 
         return 0;
@@ -62,7 +64,9 @@ public class ItemAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
+
         return position;
+
     }
 
     @Override
@@ -116,7 +120,6 @@ public class ItemAdapter extends BaseAdapter {
     public void addData(ArrayList<BookAbstract> data) {
         mBookAbstracts.addAll(data);
     }
-
 
     class ViewHolder {
 

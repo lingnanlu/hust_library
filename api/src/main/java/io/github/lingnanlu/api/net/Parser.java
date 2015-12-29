@@ -1,7 +1,5 @@
 package io.github.lingnanlu.api.net;
 
-import android.util.Log;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,6 +7,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
+import io.github.lingnanlu.api.BuildConfig;
 import io.github.lingnanlu.model.Book;
 import io.github.lingnanlu.model.BookAbstract;
 import io.github.lingnanlu.model.SearchResultMetaInfo;
@@ -55,37 +54,41 @@ public class Parser {
 
         Elements books = document.select(".briefCitRow");
 
-        int count = 0;
-        for(Element book : books) {
 
-            Log.d(TAG, "" + count);
-            BookAbstract bookAbstract = new BookAbstract();
-            bookAbstract.setImageUrl(book.select("td.briefcitExtras img").last().attr("src"));
+        if(books.size() != 0) {
+            for(Element book : books) {
 
-            Element briefcitDetail = book.select("td.briefcitDetail").first();
+                BookAbstract bookAbstract = new BookAbstract();
+                bookAbstract.setImageUrl(book.select("td.briefcitExtras img").last().attr("src"));
 
-            bookAbstract.setUrl(briefcitDetail.select("a").first().attr("href"));
-            bookAbstract.setBookTitle(briefcitDetail.select("a").first().text());
+                Element briefcitDetail = book.select("td.briefcitDetail").first();
+
+                bookAbstract.setUrl(briefcitDetail.select("a").first().attr("href"));
+                bookAbstract.setBookTitle(briefcitDetail.select("a").first().text());
 
             /*
              * 因为Html文件中，这部分内容是三个嵌套的span，所以需要对所需要的内容进行计算
              * 从这里也可以看到多层次结构的弊端
              */
-            Element level1 = briefcitDetail.select("> .briefcitDetail").first();
-            Element level2 = level1.select("> .briefcitDetail").first();
-            Element level3 = level2.select("> .briefcitDetail").first();
+                Element level1 = briefcitDetail.select("> .briefcitDetail").first();
+                Element level2 = level1.select("> .briefcitDetail").first();
+                Element level3 = level2.select("> .briefcitDetail").first();
 
-            String string1 = level1.text();
-            String string2 = level2.text();
-            String string3 = level3.text();
+                String string1 = level1.text();
+                String string2 = level2.text();
+                String string3 = level3.text();
 
-            bookAbstract.setAuthor(string1.substring(0, string1.length() - string2.length()));
-            bookAbstract.setPress(string2.substring(0, string2.length() - string3.length()));
+                bookAbstract.setAuthor(string1.substring(0, string1.length() - string2.length()));
+                bookAbstract.setPress(string2.substring(0, string2.length() - string3.length()));
 
-            bookAbstracts.add(bookAbstract);
+                bookAbstracts.add(bookAbstract);
+            }
+
+            return bookAbstracts;
         }
 
-        return bookAbstracts;
+        return null;
+
     }
 
     public static Book parseBookDetail(String html) {
@@ -98,16 +101,39 @@ public class Parser {
          */
         Element bibInfoEntry = document.select(".bibInfoEntry").first();
         Element tbody = bibInfoEntry.select("tbody").first();
-        Elements bibInfoDatas = tbody.select(".bibInfoData");
-        ArrayList<String> entrys = new ArrayList<>();
-        for(Element entry : bibInfoDatas) {
-            entrys.add(entry.text());
+        Elements trs = tbody.select("tr");
+        for(Element tr : trs) {
+
+
+            String name = tr.select("td").first().text();
+            String value = tr.select("td").last().text();
+
+            if(BuildConfig.DEBUG) {
+                //System.out.println( name + " : " + value);
+            }
+            switch (name) {
+                case "题名":
+                    book.setTitle(value.split(";")[0]);
+                    break;
+                case "统一题名":
+                    break;
+                case "索书号":
+                    book.setCallNumber(value);
+                    break;
+                case "主要責任者":
+                    book.setAuthor(value);
+                    break;
+                case "出版发行":
+                    book.setPress(value);
+                    break;
+                case "ISBN":
+                    book.setISBN(value.split(" ")[0]);
+                    break;
+                default:
+                    break;
+
+            }
         }
-        book.setTitle(entrys.get(0).split(";")[0]);
-        book.setCallNumber(entrys.get(1));
-        book.setAuthor(entrys.get(2));
-        book.setPress(entrys.get(3));
-        book.setISBN(entrys.get(5).split(" ")[0]);
 
         /*
          * 获得馆藏信息
@@ -131,6 +157,13 @@ public class Parser {
             storeEntrys.add(strs);
         }
         book.setStoreInfos(storeEntrys);
+
+        /*
+         * 设置封面图片url
+         */
+
+        Element img = document.select("[alt=书的封面]").first();
+        book.setImgUrl(img.attr("src"));
 
         return book;
     }

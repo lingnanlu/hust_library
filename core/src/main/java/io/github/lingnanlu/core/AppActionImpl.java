@@ -1,43 +1,56 @@
 package io.github.lingnanlu.core;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import io.github.lingnanlu.api.Api;
 import io.github.lingnanlu.api.ApiImpl;
+import io.github.lingnanlu.model.Book;
 import io.github.lingnanlu.model.BookAbstract;
 
 /**
  * Created by Administrator on 2015/12/28.
+ * 所有界面需要的操作(除数据绑定与用户交互,都有该模块执行
+ * 该模块利用api取得数据,并利用回调接口通过UI层
  */
 public class AppActionImpl implements AppAction {
 
+    private static final String TAG = "AppActionImpl";
     private static AppActionImpl  instance;
-    private OkHttpClient mHttpClient = new OkHttpClient();
     private Api mApi = new ApiImpl();
-    private AppActionImpl(){}
+    private OkHttpClient mHttpClient = new OkHttpClient();
+    public AppActionImpl(){}
 
-    public static AppAction getInstance() {
+//    public static AppAction getInstance() {
+//
+//        if (instance == null) {
+//            return new AppActionImpl();
+//        }
+//        return instance;
+//
+//    }
 
-        if (instance == null) {
-            return new AppActionImpl();
-        }
-        return instance;
-
-    }
     @Override
-    public void loadBooks(final String keyWord, final int page, final CallBackListener<ArrayList<BookAbstract>>
-            listener) {
+    public void loadBookList(final String keyword, final int page,
+                             final CallBack<ArrayList<BookAbstract>> listener) {
 
         new AsyncTask<String, Void, ArrayList<BookAbstract>>() {
 
             @Override
             protected ArrayList<BookAbstract> doInBackground(String... params) {
 
-                return mApi.bookAbstractList(keyWord, page);
+                Log.d(TAG, "doInBackground() called with: " + keyword + " " + page);
+                return mApi.bookAbstractList(keyword, page);
 
             }
 
@@ -50,8 +63,59 @@ public class AppActionImpl implements AppAction {
                     listener.onError();
                 }
             }
-        };
+        }.execute();
     }
+
+    @Override
+    public void loadBook(final String bookTitle, final CallBack<Book> listener) {
+
+        new AsyncTask<String, Void, Book>() {
+
+            @Override
+            protected Book doInBackground(String... params) {
+
+                Book book = mApi.bookDetail(bookTitle);
+
+                Request.Builder builder = new Request.Builder();
+                Request bookCoverRequest = builder.url(book.getImgUrl()).build();
+
+                Response response = null;
+                try {
+
+                    response = mHttpClient.newCall(bookCoverRequest).execute();
+
+                    InputStream in = response.body().byteStream();
+
+                    if (in != null) {
+
+                        Bitmap bookCover = BitmapFactory.decodeStream(in);
+                        book.setCover(bookCover);
+
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return book;
+
+            }
+
+
+            @Override
+            protected void onPostExecute(Book book) {
+
+                if (book != null) {
+                    listener.onSuccess(book);
+                } else {
+                    listener.onError();
+                }
+            }
+
+        }.execute();
+    }
+
+
 
 
 //    private class ListViewInitTask extends AsyncTask<String, Void,

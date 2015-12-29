@@ -2,6 +2,7 @@ package io.github.lingnanlu.core;
 
 import java.util.ArrayList;
 
+import io.github.lingnanlu.model.Book;
 import io.github.lingnanlu.model.BookAbstract;
 
 /**
@@ -9,7 +10,7 @@ import io.github.lingnanlu.model.BookAbstract;
  */
 public interface AppAction {
 
-    void loadBooks(String keyWord, int page, CallBackListener<ArrayList<BookAbstract>> listener);
+    void loadBookList(String keyword, int page, CallBack<ArrayList<BookAbstract>> listener);
 
-
+    void loadBook(String bookTitle, CallBack<Book> listener);
 }

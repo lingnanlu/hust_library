@@ -9,6 +9,8 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
+import io.github.lingnanlu.model.Book;
+import io.github.lingnanlu.model.BookAbstract;
 import io.github.lingnanlu.model.SearchResultMetaInfo;
 
 /**
@@ -86,9 +88,9 @@ public class HtmlParser {
         return bookAbstracts;
     }
 
-    public static BookDetail parseBookDetail(String html) {
+    public static Book parseBookDetail(String html) {
 
-        BookDetail bookDetail = new BookDetail();
+        Book book = new Book();
 
         Document document = Jsoup.parse(html);
         /*
@@ -101,11 +103,11 @@ public class HtmlParser {
         for(Element entry : bibInfoDatas) {
             entrys.add(entry.text());
         }
-        bookDetail.setTitle(entrys.get(0).split(";")[0]);
-        bookDetail.setCallNumber(entrys.get(1));
-        bookDetail.setAuthor(entrys.get(2));
-        bookDetail.setPress(entrys.get(3));
-        bookDetail.setISBN(entrys.get(5).split(" ")[0]);
+        book.setTitle(entrys.get(0).split(";")[0]);
+        book.setCallNumber(entrys.get(1));
+        book.setAuthor(entrys.get(2));
+        book.setPress(entrys.get(3));
+        book.setISBN(entrys.get(5).split(" ")[0]);
 
         /*
          * 获得馆藏信息
@@ -128,9 +130,9 @@ public class HtmlParser {
             }
             storeEntrys.add(strs);
         }
-        bookDetail.setStoreInfos(storeEntrys);
+        book.setStoreInfos(storeEntrys);
 
-        return bookDetail;
+        return book;
     }
 
 

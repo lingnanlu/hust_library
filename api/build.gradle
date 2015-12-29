@@ -16,6 +16,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    testOptions {
+
+        /*The android.jar file that is used to run unit tests does not contain any actual code -
+        that is provided by the Android system image on real devices. Instead, all methods throw exceptions (by default).
+        This is to make sure your unit tests only test your code and do not depend on any particular behaviour of the Android platform
+        (that you have not explicitly mocked e.g. using Mockito).
+        If that proves problematic, you can add the snippet below to your build.gradle to change this behavior:*/
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {

@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.debug.hv.ViewServer;
 
@@ -25,9 +26,8 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.github.lingnanlu.core.AppAction;
-import io.github.lingnanlu.core.AppActionImpl;
-import io.github.lingnanlu.core.CallBackListener;
-import io.github.lingnanlu.hustlibrary.adapter.ItemAdapter;
+import io.github.lingnanlu.core.CallBack;
+import io.github.lingnanlu.hustlibrary.adapter.BookListAdapter;
 import io.github.lingnanlu.model.BookAbstract;
 
 public class BookAbstractsActivity extends AppCompatActivity implements
@@ -36,14 +36,16 @@ public class BookAbstractsActivity extends AppCompatActivity implements
 
     private static final String TAG = "BookAbstractsActivity";
     public static final String EXTRA_BOOK_URL = "io.github.lingnanlu.hustlibrary.book_url";
+    public static final String EXTRA_BOOK_TITLE = "io.github.lingnanlu.hustlibrary.book_title";
     public static final String EXTRA_BOOK_COVER_URL =
             "io.github.lingnanlu.hustlibrary.book_cover_url";
 
-    private ItemAdapter mItemAdapter;
+    private BookListAdapter mBookListAdapter;
     private String mKeyWord;
     private AppAction mAppAction;
     private Boolean mIsLoadingMore = false;
-    private int mNextPage = 1;
+    private Boolean mHasMoreData = true;
+    private int mCurrentPage = 1;
 
     @Bind(R.id.list_book_abstracts)
     ListView mListView;
@@ -62,69 +64,35 @@ public class BookAbstractsActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_book_abstracts);
         ButterKnife.bind(this);
 
-        //init toolbar
         initToolbar();
-
         initList();
 
         mKeyWord = getIntent().getStringExtra(MainActivity.EXTRA_KEYWORD);
 
-        mAppAction = AppActionImpl.getInstance();
+        HustLibApplication application = (HustLibApplication)this.getApplication();
+        mAppAction = application.getAppAction();
 
-        mAppAction.loadBooks(mKeyWord, mNextPage, new CallBackListener<ArrayList<BookAbstract>>() {
+        mAppAction.loadBookList(mKeyWord, mCurrentPage, new CallBack<ArrayList<BookAbstract>>() {
 
             @Override
             public void onSuccess(ArrayList<BookAbstract> data) {
 
-                mItemAdapter = new ItemAdapter(BookAbstractsActivity.this, data);
-                mListView.setAdapter(mItemAdapter);
+                mBookListAdapter = new BookListAdapter(BookAbstractsActivity.this, data);
+                mListView.setAdapter(mBookListAdapter);
                 mListView.setOnScrollListener(BookAbstractsActivity.this);
 
             }
 
             @Override
             public void onError() {
-
+                Toast.makeText(BookAbstractsActivity.this, "no data fetched", Toast.LENGTH_SHORT)
+                        .show();
             }
         });
 
         ViewServer.get(this).addWindow(this);
     }
 
-    private void initList() {
-
-        //set empty view
-        ProgressBar progressBar = new ProgressBar(this);
-        progressBar.setLayoutParams(
-                new FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                        Gravity.CENTER)
-        );
-        progressBar.setIndeterminate(true);
-        ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
-        root.addView(progressBar);
-        mListView.setEmptyView(progressBar);
-
-        //set footer
-        mFooter = (LinearLayout) LayoutInflater.from(this).
-                inflate(R.layout.footer_book_abstract_list,null, false);
-        mLoadingMoreProgreeBar = (ProgressBar)mFooter.findViewById(R.id.progressbar_loading_more);
-        mNoMoreData = (TextView)mFooter.findViewById(R.id.text_no_more_data);
-        mListView.addFooterView(mFooter);
-
-        //registe listener
-        mListView.setOnItemClickListener(this);
-
-    }
-
-    private void initToolbar() {
-
-        setSupportActionBar(mToolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-    }
 
     @Override
     protected void onResume() {
@@ -141,9 +109,7 @@ public class BookAbstractsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
+    public void onScrollStateChanged(AbsListView view, int scrollState) {}
 
     /*
          * 官方文档上说,"This will be called after the scroll has completed",即scroll has completed后,
@@ -163,69 +129,51 @@ public class BookAbstractsActivity extends AppCompatActivity implements
                          int visibleItemCount,
                          int totalItemCount) {
 
-        //所有的控制逻辑放在Activity中，不要放到AsyncTask中，保持AsyncTask任务的单一性
-
         Log.d(TAG, "onScroll() "
-                + " firstVisibleItem " + firstVisibleItem
-                + " visibleItemCount " + visibleItemCount
-                + " totalItemCount " + totalItemCount
-                );
+                        + " firstVisibleItem " + firstVisibleItem
+                        + " visibleItemCount " + visibleItemCount
+                        + " totalItemCount " + totalItemCount
+                        + " isLoadingMore " + mIsLoadingMore
+        );
 
         boolean reachEnd = firstVisibleItem + visibleItemCount >= totalItemCount;
-        if(reachEnd && !mIsLoadingMore) {
 
-            mNextPage++;
+        if (reachEnd && !mIsLoadingMore && mHasMoreData) {
+
+            mCurrentPage++;
             mIsLoadingMore = true;
+
+            //到达底端时,显示ProgressBar
             mLoadingMoreProgreeBar.setVisibility(View.VISIBLE);
-            mAppAction.loadBooks(mKeyWord, mNextPage, new CallBackListener<ArrayList<BookAbstract>>() {
+
+            mAppAction.loadBookList(mKeyWord, mCurrentPage, new CallBack<ArrayList<BookAbstract>>
+                    () {
 
                 @Override
                 public void onSuccess(ArrayList<BookAbstract> data) {
-                    mItemAdapter.addData(data);
-                    mItemAdapter.notifyDataSetChanged();
+
+                    mLoadingMoreProgreeBar.setVisibility(View.GONE);
+                    mBookListAdapter.addData(data);
+                    mBookListAdapter.notifyDataSetChanged();
                     mIsLoadingMore = false;
                 }
 
                 @Override
                 public void onError() {
+
+                    Log.d(TAG, "onError()");
+                    //如果不再返回数据,就显示no more data
+                    mHasMoreData = false;
+                    mIsLoadingMore = false;
+                    mLoadingMoreProgreeBar.setVisibility(View.GONE);
                     mNoMoreData.setVisibility(View.VISIBLE);
                 }
             });
-//                if (nextPageUrl != null) {
-//
-//                    LoadMoreItemTask task = new LoadMoreItemTask();
-//                    mPreTask = task;
-//                    task.execute(nextPageUrl);
-//                } else {
-//                    mLoadingMoreProgreeBar.setVisibility(View.GONE);
-//                    mNoMoreData.setVisibility(View.VISIBLE);
-//                }
 
         }
 
 
     }
-
-    /*
-     *  以下两个方法将AsyncTask中代码移动到Activity下，这样更能体现Activity的Controller角色当某某事件发生时，
-     *  Controller需要执行的动作就写成onXXX方法
-     *  这也是为什么要使用Activity来实现OnScrollListenser的原因
-     */
-
-//    private void onMoreDataLoaded(ArrayList<BookAbstract> bookAbstracts) {
-//
-//        if (bookAbstracts != null) {
-//
-//            Log.d(TAG, "onMoreDataLoaded: Before mBookItem Size " + mBookAbstracts.size());
-//            Log.d(TAG, "onMoreDataLoaded: bookAbstracts size " + bookAbstracts.size());
-//            mBookAbstracts.addAll(bookAbstracts);
-//
-//            Log.d(TAG, "onMoreDataLoaded: After mBookItem size " + mBookAbstracts.size());
-//            mItemAdapter.notifyDataSetChanged();
-//        }
-//
-//
-//    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -240,15 +188,50 @@ public class BookAbstractsActivity extends AppCompatActivity implements
         if (bookAbstract != null) {
             Intent intent = new Intent(this, BookDetailActivity.class);
 
-            String prefix = "http://ftp.lib.hust.edu.cn";
-            intent.putExtra(EXTRA_BOOK_URL, prefix + bookAbstract.getUrl());
-            intent.putExtra(EXTRA_BOOK_COVER_URL, bookAbstract.getImageUrl());
+//            String prefix = "http://ftp.lib.hust.edu.cn";
+//            intent.putExtra(EXTRA_BOOK_URL, prefix + bookAbstract.getUrl());
+//            intent.putExtra(EXTRA_BOOK_COVER_URL, bookAbstract.getImageUrl());
 
+            intent.putExtra(EXTRA_BOOK_TITLE, bookAbstract.getBookTitle());
             startActivity(intent);
         }
 
     }
 
 
+    private void initList() {
+
+        //set empty view
+        ProgressBar progressBar = new ProgressBar(this);
+        progressBar.setLayoutParams(
+                new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        Gravity.CENTER)
+        );
+        progressBar.setIndeterminate(true);
+        ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
+        root.addView(progressBar);
+        mListView.setEmptyView(progressBar);
+
+        //set footer
+        mFooter = (LinearLayout) LayoutInflater.from(this).
+                inflate(R.layout.footer_book_abstract_list, null, false);
+        mLoadingMoreProgreeBar = (ProgressBar) mFooter.findViewById(R.id.progressbar_loading_more);
+        mNoMoreData = (TextView) mFooter.findViewById(R.id.text_no_more_data);
+        mListView.addFooterView(mFooter);
+
+        //registe listener
+        mListView.setOnItemClickListener(this);
+
+    }
+
+    private void initToolbar() {
+
+        setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+    }
 
 }

@@ -17,6 +17,7 @@ public class Book {
     private String mISBN;
     private String mLocation;
     private String mCallNumber;
+    private String mImgUrl;
     private ArrayList<String[]> mStoreInfos;
     private Bitmap mCover;
 
@@ -100,4 +101,11 @@ public class Book {
         mCover = cover;
     }
 
+    public String getImgUrl() {
+        return mImgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        mImgUrl = imgUrl;
+    }
 }
