@@ -100,7 +100,10 @@ public class ApiImpl implements Api {
 
     }
 
-    private class MetaInfo {
+    public MetaInfo getMetaInfo() {
+        return mMetaInfo;
+    }
+    public static class MetaInfo {
         String keyword;
         int totalCount;
         int currentPage;
