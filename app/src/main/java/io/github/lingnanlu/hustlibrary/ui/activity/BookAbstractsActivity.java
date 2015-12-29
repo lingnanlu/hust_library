@@ -1,4 +1,4 @@
-package io.github.lingnanlu.hustlibrary;
+package io.github.lingnanlu.hustlibrary.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,10 +25,12 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.github.lingnanlu.core.AppAction;
-import io.github.lingnanlu.core.CallBack;
-import io.github.lingnanlu.hustlibrary.adapter.BookListAdapter;
-import io.github.lingnanlu.model.BookAbstract;
+import io.github.lingnanlu.hustlibrary.core.AppAction;
+import io.github.lingnanlu.hustlibrary.core.CallBack;
+import io.github.lingnanlu.hustlibrary.HustLibApplication;
+import io.github.lingnanlu.hustlibrary.R;
+import io.github.lingnanlu.hustlibrary.ui.adapter.BookListAdapter;
+import io.github.lingnanlu.hustlibrary.bean.BookAbstract;
 
 public class BookAbstractsActivity extends AppCompatActivity implements
         AbsListView.OnScrollListener,

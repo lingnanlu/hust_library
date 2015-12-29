@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/IndigoTheme" >
 
-        <activity android:name=".MainActivity" >
+        <activity android:name=".ui.activity.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,26 +21,26 @@
         </activity>
 
         <activity
-            android:name=".BookAbstractsActivity"
-            android:parentActivityName=".MainActivity"
+            android:name=".ui.activity.BookAbstractsActivity"
+            android:parentActivityName=".ui.activity.MainActivity"
             android:label="@string/listView_activity_name"
             >
             <!-- support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".ui.activity.MainActivity"/>
         </activity>
 
         <activity
-            android:name=".BookDetailActivity"
-            android:parentActivityName=".BookAbstractsActivity"
+            android:name=".ui.activity.BookDetailActivity"
+            android:parentActivityName=".ui.activity.BookAbstractsActivity"
             android:label="Book Detail"
             >
 
             <!-- support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".ui.activity.MainActivity"/>
         </activity>
     </application>
 

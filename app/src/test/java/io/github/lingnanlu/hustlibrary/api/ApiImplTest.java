@@ -1,4 +1,4 @@
-package io.github.lingnanlu.api;
+package io.github.lingnanlu.hustlibrary.api;
 
 import org.junit.Before;
 import org.junit.Test;

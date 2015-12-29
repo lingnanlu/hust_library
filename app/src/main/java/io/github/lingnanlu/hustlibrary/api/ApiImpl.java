@@ -1,4 +1,4 @@
-package io.github.lingnanlu.api;
+package io.github.lingnanlu.hustlibrary.api;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -7,11 +7,14 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import io.github.lingnanlu.api.net.Parser;
-import io.github.lingnanlu.api.net.UrlBuilder;
-import io.github.lingnanlu.model.Book;
-import io.github.lingnanlu.model.BookAbstract;
-import io.github.lingnanlu.model.SearchResultMetaInfo;
+
+import io.github.lingnanlu.hustlibrary.BuildConfig;
+import io.github.lingnanlu.hustlibrary.bean.Book;
+import io.github.lingnanlu.hustlibrary.bean.BookAbstract;
+import io.github.lingnanlu.hustlibrary.bean.SearchResultMetaInfo;
+import io.github.lingnanlu.hustlibrary.utils.Parser;
+import io.github.lingnanlu.hustlibrary.utils.UrlBuilder;
+
 
 /**
  * Created by Administrator on 2015/12/28.

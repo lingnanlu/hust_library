@@ -2,8 +2,8 @@ package io.github.lingnanlu.hustlibrary;
 
 import android.app.Application;
 
-import io.github.lingnanlu.core.AppAction;
-import io.github.lingnanlu.core.AppActionImpl;
+import io.github.lingnanlu.hustlibrary.core.AppAction;
+import io.github.lingnanlu.hustlibrary.core.AppActionImpl;
 
 /**
  * Created by Administrator on 2015/12/29.

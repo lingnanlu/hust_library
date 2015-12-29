@@ -1,4 +1,4 @@
-package io.github.lingnanlu.api.net;
+package io.github.lingnanlu.hustlibrary.utils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -7,10 +7,11 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
-import io.github.lingnanlu.api.BuildConfig;
-import io.github.lingnanlu.model.Book;
-import io.github.lingnanlu.model.BookAbstract;
-import io.github.lingnanlu.model.SearchResultMetaInfo;
+import io.github.lingnanlu.hustlibrary.BuildConfig;
+import io.github.lingnanlu.hustlibrary.bean.Book;
+import io.github.lingnanlu.hustlibrary.bean.BookAbstract;
+import io.github.lingnanlu.hustlibrary.bean.SearchResultMetaInfo;
+
 
 /**
  * Created by Administrator on 2015/12/28.

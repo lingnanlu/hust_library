@@ -1,4 +1,4 @@
-package io.github.lingnanlu.hustlibrary.adapter;
+package io.github.lingnanlu.hustlibrary.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import io.github.lingnanlu.hustlibrary.R;
-import io.github.lingnanlu.model.Book;
+import io.github.lingnanlu.hustlibrary.bean.Book;
 
 /**
  * Created by Administrator on 2015/12/29.

@@ -1,4 +1,4 @@
-package io.github.lingnanlu.model;
+package io.github.lingnanlu.hustlibrary.bean;
 
 import android.graphics.Bitmap;
 

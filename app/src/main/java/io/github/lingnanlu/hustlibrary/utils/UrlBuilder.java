@@ -4,14 +4,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
- * Created by Administrator on 2015/12/9.
+ * Created by Administrator on 2015/12/28.
  */
-public class RequestUrlBuilder {
+public class UrlBuilder {
 
     public static final String PREFIX = "http://ftp.lib.hust.edu.cn/search*chx?/X";
-    private static final String TAG = "RequestUrlBuilder";
 
-    public static String build(String keyWord) {
+    private static final String TAG = "UrlBuilder";
+    private static final int COUNT_PER_PAGE = 50;
+
+    public static String build(String keyword) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -19,7 +21,7 @@ public class RequestUrlBuilder {
         sb.append("?SEARCH=");
 
         try {
-            sb.append(URLEncoder.encode(keyWord, "UTF-8"));
+            sb.append(URLEncoder.encode(keyword, "UTF-8"));
             return sb.toString();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -29,8 +31,8 @@ public class RequestUrlBuilder {
 
     }
 
-    public static String build(String keyWord, int begin, int totalCount) {
-
+    //因为url必须有总数的值,所以得有totalCount这个参数
+    public static String build(String keyWord, int page, int totalCount) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(PREFIX);
@@ -85,6 +87,10 @@ public class RequestUrlBuilder {
         sb.append("/");
 
         StringBuilder left = new StringBuilder();
+
+        // page = 1 -> begin = 1
+        // page = 2 -> begin = 51;
+        int begin = 1 + COUNT_PER_PAGE * (page - 1);
         left.append(begin);
         left.append(",");
         left.append(totalCount);
@@ -109,6 +115,5 @@ public class RequestUrlBuilder {
 
         return null;
     }
-
 
 }

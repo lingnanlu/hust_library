@@ -30,7 +30,4 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile project(':viewserver')
-    compile project(':model')
-    compile project(':api')
-    compile project(':core')
 }

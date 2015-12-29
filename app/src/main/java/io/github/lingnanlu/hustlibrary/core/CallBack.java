@@ -1,4 +1,4 @@
-package io.github.lingnanlu.core;
+package io.github.lingnanlu.hustlibrary.core;
 
 /**
  * Created by Administrator on 2015/12/28.

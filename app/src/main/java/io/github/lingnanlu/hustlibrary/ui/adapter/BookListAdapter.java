@@ -1,4 +1,4 @@
-package io.github.lingnanlu.hustlibrary.adapter;
+package io.github.lingnanlu.hustlibrary.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import io.github.lingnanlu.hustlibrary.R;
 import io.github.lingnanlu.hustlibrary.utils.BitmapCache;
-import io.github.lingnanlu.model.BookAbstract;
+import io.github.lingnanlu.hustlibrary.bean.BookAbstract;
 
 /**
  * Created by Administrator on 2015/12/28.
@@ -93,7 +93,7 @@ public class BookListAdapter extends BaseAdapter {
 
         }
 
-        io.github.lingnanlu.model.BookAbstract bookAbstract = mBookAbstracts.get(position);
+        BookAbstract bookAbstract = mBookAbstracts.get(position);
 
         viewHolder.bookAuthor.setText(bookAbstract.getAuthor());
         viewHolder.bookPress.setText(bookAbstract.getPress());

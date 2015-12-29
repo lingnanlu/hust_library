@@ -1,9 +1,10 @@
-package io.github.lingnanlu.api;
+package io.github.lingnanlu.hustlibrary.api;
+
 
 import java.util.ArrayList;
 
-import io.github.lingnanlu.model.Book;
-import io.github.lingnanlu.model.BookAbstract;
+import io.github.lingnanlu.hustlibrary.bean.Book;
+import io.github.lingnanlu.hustlibrary.bean.BookAbstract;
 
 /**
  * Created by Administrator on 2015/12/28.

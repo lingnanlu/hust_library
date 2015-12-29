@@ -1,4 +1,4 @@
-package io.github.lingnanlu.hustlibrary;
+package io.github.lingnanlu.hustlibrary.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.widget.Spinner;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.github.lingnanlu.hustlibrary.R;
+import io.github.lingnanlu.hustlibrary.ui.activity.BookAbstractsActivity;
 
 public class MainActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener,

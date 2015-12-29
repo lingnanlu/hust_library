@@ -1,4 +1,4 @@
-package io.github.lingnanlu.model;
+package io.github.lingnanlu.hustlibrary.bean;
 
 /**
  * Created by Administrator on 2015/12/28.

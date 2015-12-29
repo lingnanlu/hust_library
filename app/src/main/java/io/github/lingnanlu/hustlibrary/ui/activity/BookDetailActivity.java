@@ -1,4 +1,4 @@
-package io.github.lingnanlu.hustlibrary;
+package io.github.lingnanlu.hustlibrary.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -16,11 +16,13 @@ import com.android.volley.toolbox.Volley;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.github.lingnanlu.core.AppAction;
-import io.github.lingnanlu.core.CallBack;
-import io.github.lingnanlu.hustlibrary.adapter.BookStoreInfoAdapter;
+import io.github.lingnanlu.hustlibrary.core.AppAction;
+import io.github.lingnanlu.hustlibrary.core.CallBack;
+import io.github.lingnanlu.hustlibrary.HustLibApplication;
+import io.github.lingnanlu.hustlibrary.R;
+import io.github.lingnanlu.hustlibrary.ui.adapter.BookStoreInfoAdapter;
 import io.github.lingnanlu.hustlibrary.utils.BitmapCache;
-import io.github.lingnanlu.model.Book;
+import io.github.lingnanlu.hustlibrary.bean.Book;
 
 public class BookDetailActivity extends AppCompatActivity {
 
